@@ -78,6 +78,8 @@ tests/              # pruebas con Jest + Supertest
    `db` puede ser `"ok"` (la base responde), `"sin configurar"` (no hay `DATABASE_URL`) o `"error"` (la base no responde). `version` sale de `package.json` y sirve para confirmar qué versión está desplegada (por ejemplo, después de un rollback).
 
 ## Cómo trabajamos
+Antes de empezar, lee [AGENTS.md](AGENTS.md): flujo de trabajo, tareas de cada uno y contrato técnico.
+
 Ver [CONTRIBUTING.md](CONTRIBUTING.md) y la [Definición de Terminado](docs/definicion-de-terminado.md).
 
 ## Versiones y rollback
