@@ -1,6 +1,7 @@
 const express = require('express');
 const { SERVICIOS } = require('../constantes');
-const { crearSolicitud } = require('../repositories/solicitudes');
+const { crearSolicitud, buscarPorCodigo } = require('../repositories/solicitudes');
+const { normalizarCodigo, esCodigoValido } = require('../services/codigo');
 
 const router = express.Router();
 
@@ -67,6 +68,49 @@ router.post('/api/solicitudes', async (req, res) => {
     console.error('Error al registrar la solicitud:', error.message);
     return res.status(500).json({
       error: 'No pudimos registrar la solicitud. Intenta de nuevo.',
+    });
+  }
+});
+
+// ---------- SOP-41: consulta pública del estado (sin login) ----------
+
+const NO_ENCONTRADA = 'No encontramos una solicitud con ese código. Revisa que esté bien escrito.';
+
+// Arma la respuesta pública: NUNCA incluye nombre ni correo (AGENTS.md, sección 7.4).
+// La nota del técnico solo se muestra cuando el estado es "Esperando tu respuesta".
+function vistaPublica(solicitud) {
+  return {
+    codigo: solicitud.codigo,
+    servicio: solicitud.servicio,
+    estado: solicitud.estado,
+    creadoEn: solicitud.creadoEn,
+    actualizadoEn: solicitud.actualizadoEn,
+    responsable: solicitud.responsable || null,
+    notaTecnico:
+      solicitud.estado === 'Esperando tu respuesta' ? solicitud.notaTecnico || null : null,
+  };
+}
+
+router.get('/api/solicitudes/:codigo', async (req, res) => {
+  // Acepta el código sin importar mayúsculas ni espacios: " tk-ab 12 " → "TK-AB12".
+  const codigo = normalizarCodigo(req.params.codigo);
+
+  // Si ni siquiera tiene el formato TK-XXXX, no vale la pena ir a la base.
+  if (!esCodigoValido(codigo)) {
+    return res.status(404).json({ error: NO_ENCONTRADA });
+  }
+
+  try {
+    const solicitud = await buscarPorCodigo(codigo);
+
+    if (!solicitud) {
+      return res.status(404).json({ error: NO_ENCONTRADA });
+    }
+    return res.status(200).json(vistaPublica(solicitud));
+  } catch (error) {
+    console.error('Error al consultar la solicitud:', error.message);
+    return res.status(500).json({
+      error: 'No pudimos consultar tu solicitud. Intenta de nuevo.',
     });
   }
 });

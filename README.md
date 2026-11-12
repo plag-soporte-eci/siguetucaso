@@ -1,5 +1,7 @@
 # SigueTuCaso – Solicitudes de soporte
 
+[![CI](https://github.com/plag-soporte-eci/siguetucaso/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/plag-soporte-eci/siguetucaso/actions/workflows/ci.yml)
+
 Reporta tu problema una sola vez, con lo necesario, y consulta cuando quieras en qué va, sin tener que escribirle a nadie.
 
 Proyecto final de **Pensamiento Lean y Agile** – Escuela Colombiana de Ingeniería Julio Garavito.
@@ -8,8 +10,7 @@ Proyecto final de **Pensamiento Lean y Agile** – Escuela Colombiana de Ingenie
 | Integrante | Rol |
 |---|---|
 | Juan Sebastián Ortega | Product Owner + Developer |
-| Manuel David Robayo | Scrum Master + Developer |
-| Sebastián Albarracín Silva | Developer – Frontend |
+| Sebastián Albarracín Silva | Scrum Master + Developer Frontend |
 | Nicolas Toro | Developer – Backend y calidad |
 | David Salomón Baena Rubio | Developer – DevOps |
 
@@ -67,6 +68,7 @@ tests/              # pruebas con Jest + Supertest
    ```bash
    npm test
    ```
+   Las mismas pruebas corren solas en GitHub Actions ([`ci.yml`](.github/workflows/ci.yml)) en cada push y Pull Request hacia `main`; un PR con pruebas en rojo no se puede integrar.
 7. **Verificar `/health`:** con el servidor corriendo, abrir http://localhost:3000/health o:
    ```bash
    curl http://localhost:3000/health
@@ -76,6 +78,54 @@ tests/              # pruebas con Jest + Supertest
    { "status": "ok", "version": "0.1.0", "db": "sin configurar", "time": "2026-11-10T17:00:00.000Z" }
    ```
    `db` puede ser `"ok"` (la base responde), `"sin configurar"` (no hay `DATABASE_URL`) o `"error"` (la base no responde). `version` sale de `package.json` y sirve para confirmar qué versión está desplegada (por ejemplo, después de un rollback).
+
+## Despliegue (Render + Neon)
+La demo corre gratis en **Render** (la app) y **Neon** (la base PostgreSQL). Cada merge a `main` se despliega solo, pero únicamente si el CI quedó en verde.
+
+**Dependencias:** cuenta en [Neon](https://console.neon.tech) y en [Render](https://dashboard.render.com), y que la app de GitHub de Render tenga acceso al repositorio `plag-soporte-eci/siguetucaso` (si no aparece, lo aprueba un admin de la organización).
+
+### 1. Base de datos en Neon
+1. **New project** → nombre `siguetucaso`, región **AWS US East (N. Virginia)** (la misma zona de Render, para que la app y la base estén cerca).
+2. En **Connect** copiar la cadena **pooled** (el host termina en `-pooler`):
+   `postgresql://usuario:clave@ep-xxxx-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require`
+3. Esa cadena **no se pega en ningún archivo del repositorio**: solo en Render (y, si quieres probar con base real, en tu `.env` local).
+
+La tabla `solicitudes` no se crea a mano: la crea `src/initDb.js` al arrancar la app (SOP-11).
+
+### 2. Web service en Render
+1. **New → Web Service** → elegir el repositorio `plag-soporte-eci/siguetucaso`.
+2. Configuración:
+
+   | Campo | Valor |
+   |---|---|
+   | Name | `siguetucaso` |
+   | Region | Virginia (US East) |
+   | Branch | `main` |
+   | Language | Node |
+   | Build Command | `npm ci` |
+   | Start Command | `npm start` |
+   | Instance Type | Free |
+
+3. **Environment Variables** (se guardan en Render, nunca en el repositorio):
+
+   | Variable | Valor |
+   |---|---|
+   | `DATABASE_URL` | Cadena *pooled* de Neon |
+   | `TECNICO_PASSWORD` | Clave del panel del técnico (se comparte con el equipo por privado) |
+   | `NODE_ENV` | `production` |
+   | `NODE_VERSION` | `20` (la misma versión del CI) |
+
+   `PORT` no se configura: Render la pone sola y `src/server.js` la usa.
+4. **Create Web Service** y esperar el primer deploy.
+5. **Settings → Health Checks → Path:** `/health`. Render lo consulta cada pocos segundos y no pasa tráfico a un deploy nuevo que no responda.
+6. **Settings → Build & Deploy → Auto-Deploy:** **After CI Checks Pass**. Así un merge a `main` se despliega solo, pero nunca si el CI (`ci.yml`) falló.
+
+### 3. Verificar
+- Abrir `https://<servicio>.onrender.com/health` → debe responder `"status": "ok"` y `"db": "ok"`.
+- En **Logs** de Render debe aparecer `SigueTuCaso v… escuchando…` y `Base de datos: configurada (DATABASE_URL)`.
+- Hacer merge de un PR y revisar en **Events** que arrancó un deploy nuevo con ese commit.
+
+> **Antes de cada demo:** el plan gratis de Render se duerme tras 15 minutos sin tráfico y el primer acceso tarda cerca de un minuto en despertar. Abrir `/health` 1–2 minutos antes. Neon también suspende la base tras 5 minutos sin consultas y se despierta sola con la primera.
 
 ## Cómo trabajamos
 Antes de empezar, lee [AGENTS.md](AGENTS.md): flujo de trabajo, tareas de cada uno y contrato técnico.
@@ -88,7 +138,37 @@ Ver [CONTRIBUTING.md](CONTRIBUTING.md) y la [Definición de Terminado](docs/defi
 | v1.0 | 1 | Registrar solicitud y consultar estado con código |
 | v2.0 | 2 | Panel del técnico |
 
-Rollback: _(se documenta en el Sprint 2)_
+Rollback: ver [Operación: logs, salud y rollback](#operación-logs-salud-y-rollback).
+
+## Operación: logs, salud y rollback
+
+### Logs
+- **Dónde verlos:** en Render → servicio → **Logs** (en vivo y con buscador). Los deploys y los rollbacks aparecen en **Events**.
+- **Qué registra la app:**
+  - Al arrancar: `SigueTuCaso v<versión> escuchando en …` y si la base está configurada o no (nunca imprime la cadena de conexión).
+  - Cada petición (morgan): método, ruta, código de respuesta y tiempo. Ejemplo: `GET /health 200 5.0 ms`.
+  - Errores de la base: `Error al verificar la base de datos: <mensaje>`.
+- **Sin claves en los logs:** morgan no registra encabezados (la clave del técnico viaja en `X-Tecnico-Clave`) y ningún `console.log` imprime `DATABASE_URL` ni `TECNICO_PASSWORD`.
+
+### Salud
+- `GET /health` responde `status`, `version` (sale de `package.json`), `db` (`ok`, `sin configurar` o `error`) y `time`.
+- Render lo consulta cada pocos segundos (health check configurado en `/health`). Si un deploy nuevo no responde, Render no le pasa tráfico y deja funcionando la versión anterior.
+- `/health` responde 200 aunque la base falle: la app sigue viva, pero `db: "error"` significa que hay que revisar Neon.
+
+### Rollback: volver a la última versión que funcionaba
+1. **Detectar el fallo:** health check en rojo en Render, `db: "error"` o una `version` inesperada en `/health`, o errores en **Logs**.
+2. **Volver atrás:** Render → servicio → **Deploys** (o **Events**) → elegir el último deploy bueno → **Rollback** → confirmar. Render reutiliza el build anterior, así que tarda poco.
+3. **Verificar:** abrir `/health` y confirmar que `version` volvió a la anterior. Para eso cada release sube la versión en `package.json` (v1.0 → `1.0.0`, v2.0 → `2.0.0`).
+4. **Corregir:** arreglar en una rama `fix/SOP-X-…` → PR → CI en verde → merge.
+5. **Reactivar el auto-deploy:** el rollback desde el panel de Render **apaga el auto-deploy** para que un commit nuevo no vuelva a subir el error. Después del merge de la corrección, volver a **Settings → Build & Deploy → Auto-Deploy: After CI Checks Pass**.
+6. **Registrar:** comentario en la tarjeta de Jira con qué falló, a qué versión se volvió y cómo se corrigió.
+
+El rollback devuelve el código, no los datos: las solicitudes guardadas en Neon se mantienen. Como la tabla se creó completa desde el Sprint 1, volver a una versión anterior no rompe la base.
+
+### Simulacro de rollback
+| Fecha | De → a | Tiempo hasta `/health` con la versión anterior | Evidencia |
+|---|---|---|---|
+| _pendiente_ | v2.0 → v1.0 → v2.0 | | Capturas adjuntas en SOP-34 (Jira) |
 
 ## Componentes reutilizados y uso de IA
 | Componente / herramienta | Uso | Licencia |

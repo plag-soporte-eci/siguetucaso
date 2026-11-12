@@ -19,7 +19,7 @@ Una historia de usuario está **Terminada** solo si cumple TODO lo siguiente:
 - [ ] La tarjeta está en la columna **Hecho** en Jira.
 
 > Si una historia no cumple algún punto, **no está terminada** y no cuenta para el sprint.
-> Acordada por el equipo el 10/11/2026 por el grupo de WhatsApp del equipo. Integrantes: Juan Sebastián Ortega Muñoz (Product Owner), Sebastián Albarracín Silva (Frontend), David Salomón Baena Rubio (DevOps), Manuel David Robayo (Scrum Master), Nicolas Toro (Backend). Cambios a esta DoD se registran abajo.
+> Acordada por el equipo el 10/11/2026 por el grupo de WhatsApp del equipo. Integrantes: Juan Sebastián Ortega Muñoz (Product Owner), Sebastián Albarracín Silva (Scrum Master + Developer Frontend), David Salomón Baena Rubio (DevOps), Nicolas Toro (Backend). Cambios a esta DoD se registran abajo.
 
 ## Historial de cambios
 | Fecha | Cambio | Motivo (retro / review) |
