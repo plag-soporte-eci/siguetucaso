@@ -7,9 +7,8 @@ Proyecto final de **Pensamiento Lean y Agile** – Escuela Colombiana de Ingenie
 ## Equipo
 | Integrante | Rol |
 |---|---|
-| Juan Sebastián Ortega | Product Owner + Developer |
-| Manuel David Robayo | Scrum Master + Developer |
-| Sebastián Albarracín Silva | Developer – Frontend |
+| Juan Sebastián Ortega Muñoz | Product Owner + Developer |
+| Sebastián Albarracín Silva | Scrum Master + Developer Frontend |
 | Nicolas Toro | Developer – Backend y calidad |
 | David Salomón Baena Rubio | Developer – DevOps |
 

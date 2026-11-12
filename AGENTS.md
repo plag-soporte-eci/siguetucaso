@@ -95,8 +95,7 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 | Integrante | Rol | Jira / GitHub |
 |---|---|---|
 | Juan Sebastián Ortega Muñoz | Product Owner + Developer | Dueño del backlog |
-| Manuel David Robayo | Scrum Master + Developer | Dueño de los eventos y del tablero |
-| Sebastián Albarracín Silva | Developer – Frontend | Dueño de `public/` |
+| Sebastián Albarracín Silva | Scrum Master + Developer Frontend | Dueño de `public/` y de los eventos y el tablero |
 | Nicolas Toro | Developer – Backend y calidad | Dueño de `src/` (API y BD) y de las pruebas |
 | David Salomón Baena Rubio | Developer – DevOps | Dueño de CI, despliegue, operación y releases |
 
@@ -114,11 +113,11 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 
 | Cuándo | Qué | Quién |
 |---|---|---|
-| Todos los días, 8:00 p. m. (10 min, Meet o WhatsApp) | **Daily:** qué hice, qué haré, qué me bloquea | Todos · facilita Manuel |
+| Todos los días, 8:00 p. m. (10 min, Meet o WhatsApp) | **Daily:** qué hice, qué haré, qué me bloquea | Todos · facilita Sebastián A. |
 | Mié 11, 11:59 p. m. | **Corte de código del Sprint 1** (todo en `main` y desplegado) | Todos |
 | Jue 12, 8:00 a. m. | Release **v1.0** | David |
 | Jue 12, mañana | **Sprint Review 1** con 2 usuarios reales (cronometrar el indicador) | Juan Sebastián + todos |
-| Jue 12, antes de las 12:00 | **Retrospectiva 1** (una mejora, un responsable, cómo medirla) | Manuel + todos |
+| Jue 12, antes de las 12:00 | **Retrospectiva 1** (una mejora, un responsable, cómo medirla) | Sebastián A. + todos |
 | Jue 12, tarde | **Sprint Planning 2** | Todos |
 | Mié 18, 11:59 p. m. | Corte de código del Sprint 2 | Todos |
 | Jue 19 | Release **v2.0**, Review 2 y Retro 2 | Todos |
@@ -130,36 +129,31 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 | Orden | Tarea | Sprint | Depende de | Bloquea a |
 |---|---|---|---|---|
 | 1 | **SOP-36** Guía del equipo (este archivo) | 1 | — | A todos (contrato técnico) |
-| 2 | **SOP-12 · H2 parte 1:** `src/services/codigo.js` + su prueba (generador del código) — **hoy mismo, PR pequeño** | 1 | — | Nicolas (SOP-11 lo usa) |
-| 3 | **SOP-12 · H2 parte 2:** pantalla de confirmación con el código y botón "Copiar" (coordinar con Sebastián A.) | 1 | SOP-11 (formulario y API) | SOP-13 |
+| 2 | **SOP-39 · H2 parte 1:** `src/services/codigo.js` + su prueba (generador del código) — **hoy mismo, PR pequeño** | 1 | — | Nicolas (SOP-37 lo usa) |
+| 3 | **SOP-40 · H2 parte 2:** pantalla de confirmación con el código y botón "Copiar" (coordinar con Sebastián A.) | 1 | SOP-37 (API) y SOP-38 (formulario) | SOP-42 |
 | 4 | Preparar y dirigir la **Sprint Review 1** con 2 usuarios; medir el indicador | 1 | SOP-33 (v1.0) | — |
 | 5 | Repriorizar el backlog con el feedback; aceptar o rechazar historias | 1–2 | — | Planning 2 |
 
-#### Manuel David Robayo — Scrum Master + Developer
+#### Sebastián Albarracín Silva — Scrum Master + Developer Frontend
 
 | Orden | Tarea | Sprint | Depende de | Bloquea a |
 |---|---|---|---|---|
-| 1 | Organizar la **daily** de las 8 p. m. y guardar evidencia (captura o nota corta de cada una) | 1–2 | — | — |
-| 2 | Vigilar el tablero: WIP ≤ 2, bloqueos con *flag*, PR sin revisar > 24 h | 1–2 | — | — |
-| 3 | **SOP-13 · H3 parte backend:** `GET /api/solicitudes/:codigo` + prueba | 1 | SOP-11 parte backend | SOP-13 pantalla |
-| 4 | Registrar las **métricas Lean** al final de cada sprint: tiempo de ciclo por historia (reporte *Cycle time* de Jira) e historias terminadas | 1–2 | — | Retro |
-| 5 | Facilitar la **retrospectiva**: identificar 2 desperdicios reales, elegir 1 mejora, responsable y cómo medirla | 1–2 | Review | — |
-| 6 | **SOP-17 · H7** Asignar responsable (API + prueba; pantalla con Sebastián A.) | 2 | SOP-14 | SOP-35 |
-
-#### Sebastián Albarracín Silva — Developer Frontend
-
-| Orden | Tarea | Sprint | Depende de | Bloquea a |
-|---|---|---|---|---|
-| 1 | **SOP-11 · H1 parte frontend:** `public/index.html` con el formulario guiado y validaciones en el navegador. **Empieza ya contra el contrato de la sección 7.4** (no esperes la API) | 1 | — | SOP-12 parte 2 |
-| 2 | **SOP-13 · H3 parte frontend:** `public/consultar.html` con el campo del código y la línea de pasos del estado | 1 | Contrato 7.4 (probar con la API de Manuel cuando esté) | Review 1 |
-| 3 | Revisar que todo funcione en celular | 1 | — | Review 1 |
-| 4 | Pantallas del técnico `public/tecnico.html` para **SOP-14, SOP-15, SOP-16, SOP-17** (con cada dueño) | 2 | API de cada historia | SOP-35 |
+| 1 | **SOP-38 · H1 pantalla del formulario** ✅: `public/index.html` con el formulario guiado y validaciones en el navegador, contra el contrato de la sección 7.4 | 1 | — | SOP-40 |
+| 2 | **SOP-42 · H3 pantalla de consulta** ✅: `public/consultar.html` con el campo del código y la línea de pasos del estado | 1 | Contrato 7.4 (probar con SOP-41 cuando esté) | Review 1 |
+| 3 | **SOP-41 · H3 API de consulta:** `GET /api/solicitudes/:codigo` + prueba | 1 | SOP-37 | SOP-42 (integración con la API real) |
+| 4 | Revisar que todo funcione en celular | 1 | — | Review 1 |
+| 5 | Organizar la **daily** de las 8 p. m. y guardar evidencia (captura o nota corta de cada una) | 1–2 | — | — |
+| 6 | Vigilar el tablero: WIP ≤ 2, bloqueos con *flag*, PR sin revisar > 24 h | 1–2 | — | — |
+| 7 | Registrar las **métricas Lean** al final de cada sprint: tiempo de ciclo por historia (reporte *Cycle time* de Jira) e historias terminadas | 1–2 | — | Retro |
+| 8 | Facilitar la **retrospectiva**: identificar 2 desperdicios reales, elegir 1 mejora, responsable y cómo medirla | 1–2 | Review | — |
+| 9 | **SOP-17 · H7** Asignar responsable (API + prueba + pantalla) | 2 | SOP-14 | SOP-35 |
+| 10 | Pantallas del técnico `public/tecnico.html` para **SOP-14, SOP-15, SOP-16, SOP-17** (con cada dueño) | 2 | API de cada historia | SOP-35 |
 
 #### Nicolas Toro — Developer Backend y calidad
 
 | Orden | Tarea | Sprint | Depende de | Bloquea a |
 |---|---|---|---|---|
-| 1 | **SOP-11 · H1 parte backend:** `src/constantes.js`, `src/schema.sql`, `src/initDb.js`, `src/repositories/solicitudes.js`, `POST /api/solicitudes` + pruebas. **Es la tarea más urgente del sprint** | 1 | SOP-12 parte 1 (si aún no está, usar un código temporal y reemplazarlo) | Manuel (SOP-13), Juan Sebastián (SOP-12 parte 2), Sebastián A. (integración) |
+| 1 | **SOP-37 · H1 API + BD:** `src/constantes.js`, `src/schema.sql`, `src/initDb.js`, `src/repositories/solicitudes.js`, `POST /api/solicitudes` + pruebas. **Es la tarea más urgente del sprint** | 1 | SOP-39 (si aún no está, usar un código temporal y reemplazarlo) | Sebastián A. (SOP-41), Juan Sebastián (SOP-40) |
 | 2 | Ayudar a que las pruebas de los demás usen pg-mem bien (sección 7.6) | 1–2 | — | — |
 | 3 | **SOP-15 · H5** Cambiar estado (API + prueba) | 2 | SOP-14 | SOP-16 |
 | 4 | **SOP-16 · H6** "Esperando tu respuesta" con nota (API + prueba) | 2 | SOP-15 | SOP-35 |
@@ -179,11 +173,10 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 
 | Autor del PR | Revisa | Si no está disponible |
 |---|---|---|
-| Juan Sebastián | Nicolas | Manuel |
-| Manuel | Nicolas | David |
-| Sebastián A. | Juan Sebastián | Manuel |
-| Nicolas | David | Juan Sebastián |
-| David | Nicolas | Manuel |
+| Juan Sebastián | Nicolas | David |
+| Sebastián A. | Juan Sebastián | Nicolas |
+| Nicolas | David | Sebastián A. |
+| David | Nicolas | Juan Sebastián |
 
 ### 4.5 Mapa de dependencias
 
@@ -191,13 +184,13 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 flowchart LR
   S30[SOP-30 Esqueleto ✅] --> S31[SOP-31 CI]
   S30 --> S32[SOP-32 Deploy]
-  S12a[SOP-12 parte 1: codigo.js] --> S11b[SOP-11 API + BD]
-  S11b --> S13b[SOP-13 API consulta]
-  S11f[SOP-11 Formulario] --> S12b[SOP-12 parte 2: confirmación]
-  S11b --> S12b
-  S12b --> S13f[SOP-13 Pantalla consulta]
-  S13b --> S13f
-  S13f --> S33[SOP-33 Release v1.0]
+  S39[SOP-39 codigo.js] --> S37[SOP-37 API + BD]
+  S37 --> S41[SOP-41 API consulta]
+  S38[SOP-38 Formulario ✅] --> S40[SOP-40 Confirmación]
+  S37 --> S40
+  S40 --> S42[SOP-42 Pantalla consulta ✅]
+  S41 --> S42
+  S42 --> S33[SOP-33 Release v1.0]
   S32 --> S33
   S33 --> S14[SOP-14 Lista técnico]
   S14 --> S15[SOP-15 Cambiar estado]
@@ -209,7 +202,7 @@ flowchart LR
 ```
 
 **Camino crítico del Sprint 1** (si uno se atrasa, se atrasa la demo):
-`SOP-12 parte 1 → SOP-11 API → SOP-13 API → SOP-13 pantalla → SOP-33 v1.0`, en paralelo con `SOP-31 → SOP-32`.
+`SOP-39 codigo.js → SOP-37 API + BD → SOP-41 API consulta → SOP-42 pantalla consulta → SOP-33 v1.0`, en paralelo con `SOP-31 → SOP-32`.
 
 ---
 
@@ -254,7 +247,7 @@ src/
   repositories/solicitudes.js  # todas las consultas SQL       → Nicolas (SOP-11) y se amplía en S2
   middleware/tecnicoAuth.js # valida la clave del técnico     → David (SOP-14)
   routes/health.js          # ya existe
-  routes/solicitudes.js     # API pública                     → Nicolas (POST) y Manuel (GET)
+  routes/solicitudes.js     # API pública                     → Nicolas (POST, SOP-37) y Sebastián A. (GET, SOP-41)
   routes/tecnico.js         # API del técnico                 → Sprint 2
 public/
   index.html                # formulario de reporte + confirmación  → Sebastián A. (SOP-11, SOP-12)
@@ -390,7 +383,7 @@ module.exports = { usarBaseEnMemoria };
 
 | Situación | Qué hacer |
 |---|---|
-| Estoy bloqueado por otra tarea | *Flag* en Jira + comentario explicando qué esperas + mensaje al grupo. Manuel ayuda a destrabar. Mientras tanto, avanza contra el contrato (sección 7) con datos de prueba. |
+| Estoy bloqueado por otra tarea | *Flag* en Jira + comentario explicando qué esperas + mensaje al grupo. Sebastián A. (Scrum Master) ayuda a destrabar. Mientras tanto, avanza contra el contrato (sección 7) con datos de prueba. |
 | El CI falla en mi PR | Corre `npm test` en local, corrige en la misma rama y vuelve a subir. Nunca se desactiva una prueba para pasar. |
 | Conflicto de merge | `git checkout main && git pull`, luego `git checkout mi-rama && git merge main`, resuelve, prueba y sube. Si es en un archivo de otro, pregúntale. |
 | La demo en Render está caída | Avisa a David. Él revisa los logs y, si hace falta, hace rollback (SOP-34). |
