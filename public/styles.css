@@ -354,3 +354,52 @@ h1 {
 .confirmacion a {
   color: var(--primario);
 }
+
+/* ---------- Confirmación con el código (index.html, SOP-40) ---------- */
+.codigo-generado:focus {
+  outline: none;
+}
+
+/* Botón secundario: borde azul, para no competir con "Consultar mi solicitud" */
+.boton-copiar {
+  width: 100%;
+  padding: 12px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--primario);
+  background: var(--tarjeta);
+  border: 2px solid var(--primario);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.boton-copiar:active {
+  background: #e0e7ff;
+}
+
+.mensaje-copiar {
+  min-height: 1.2em;
+  margin: 8px 0 16px;
+  font-size: 0.9rem;
+}
+
+.aviso-guardar {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--fondo);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* Enlace con apariencia de botón principal */
+.confirmacion a.boton-consultar {
+  display: block;
+  padding: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background: var(--primario);
+  border-radius: 8px;
+}

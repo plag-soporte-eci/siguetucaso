@@ -63,6 +63,28 @@ function validarFormulario(datos) {
   return errores;
 }
 
+// ---------- Confirmación con el código (SOP-40, H2 parte 2) ----------
+
+// Arma el enlace a la consulta con el código ya puesto: consultar.html?codigo=TK-XXXX.
+// consultar.js lee ese parámetro y busca la solicitud sola.
+function enlaceConsulta(codigo) {
+  return 'consultar.html?codigo=' + encodeURIComponent(codigo);
+}
+
+// Intenta copiar un texto al portapapeles. Devuelve true si lo logró y false si no.
+// Recibe el portapapeles como parámetro (en el navegador es navigator.clipboard)
+// para poder probarla con Jest usando uno de mentiras.
+async function copiarTexto(texto, portapapeles) {
+  if (!portapapeles || typeof portapapeles.writeText !== 'function') return false;
+  try {
+    await portapapeles.writeText(texto);
+    return true;
+  } catch (err) {
+    // Por ejemplo: el navegador no dio permiso o la página no está en https.
+    return false;
+  }
+}
+
 // ---------- Todo lo de abajo solo corre en el navegador ----------
 if (typeof document !== 'undefined') {
   const form = document.getElementById('form-solicitud');
@@ -108,14 +130,46 @@ if (typeof document !== 'undefined') {
     });
   });
 
-  // Confirmación básica con el código. SOP-12 parte 2 la completa (botón "Copiar").
+  const codigoGenerado = document.getElementById('codigo-generado');
+  const mensajeCopiar = document.getElementById('mensaje-copiar');
+
+  // Cambia el formulario por la confirmación con el código (SOP-40).
   function mostrarConfirmacion(respuesta) {
-    document.getElementById('codigo-generado').textContent = respuesta.codigo;
-    document.getElementById('enlace-consulta').href =
-      'consultar.html?codigo=' + encodeURIComponent(respuesta.codigo);
+    codigoGenerado.textContent = respuesta.codigo;
+    document.getElementById('enlace-consulta').href = enlaceConsulta(respuesta.codigo);
+    mensajeCopiar.textContent = '';
+
+    // Se ocultan el formulario y los textos de arriba/abajo: solo queda la confirmación.
     form.hidden = true;
+    document.getElementById('intro').hidden = true;
+    document.getElementById('enlace-ya-tengo').hidden = true;
     document.getElementById('confirmacion').hidden = false;
+
+    // El foco va al código para que el lector de pantalla lo anuncie.
+    codigoGenerado.focus();
   }
+
+  // Selecciona el código en pantalla para que el usuario lo copie a mano si hace falta.
+  function seleccionarCodigo() {
+    const rango = document.createRange();
+    rango.selectNodeContents(codigoGenerado);
+    const seleccion = window.getSelection();
+    seleccion.removeAllRanges();
+    seleccion.addRange(rango);
+  }
+
+  // Botón "Copiar código".
+  document.getElementById('boton-copiar').addEventListener('click', async () => {
+    const copiado = await copiarTexto(codigoGenerado.textContent, navigator.clipboard);
+    if (copiado) {
+      mensajeCopiar.textContent = '¡Código copiado!';
+      mensajeCopiar.className = 'mensaje-copiar ok';
+    } else {
+      seleccionarCodigo();
+      mensajeCopiar.textContent = 'No pudimos copiarlo. Ya quedó seleccionado: cópialo a mano o anótalo.';
+      mensajeCopiar.className = 'mensaje-copiar error';
+    }
+  });
 
   form.addEventListener('submit', async (evento) => {
     evento.preventDefault();
@@ -157,5 +211,12 @@ if (typeof document !== 'undefined') {
 
 // Permite usar estas funciones en las pruebas con Jest (en el navegador no existe "module").
 if (typeof module !== 'undefined') {
-  module.exports = { SERVICIOS, MAX_DESCRIPCION, limpiarDatos, validarFormulario };
+  module.exports = {
+    SERVICIOS,
+    MAX_DESCRIPCION,
+    limpiarDatos,
+    validarFormulario,
+    enlaceConsulta,
+    copiarTexto,
+  };
 }
