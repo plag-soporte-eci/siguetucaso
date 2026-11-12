@@ -16,8 +16,8 @@ Proyecto final de **Pensamiento Lean y Agile** – Escuela Colombiana de Ingenie
 
 ## Enlaces
 - Tablero Jira: https://plag-soporte-eci.atlassian.net/jira/software/projects/SOP/boards/1
-- Demo desplegada: _(link)_
-- Health check: _(link)/health_
+- Demo desplegada: https://siguetucaso.onrender.com
+- Health check: https://siguetucaso.onrender.com/health
 
 ## Stack
 | Tecnología | Por qué |
