@@ -128,9 +128,9 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 
 | Orden | Tarea | Sprint | Depende de | Bloquea a |
 |---|---|---|---|---|
-| 1 | **SOP-36** Guía del equipo (este archivo) | 1 | — | A todos (contrato técnico) |
-| 2 | **SOP-12 · H2 parte 1:** `src/services/codigo.js` + su prueba (generador del código) — **hoy mismo, PR pequeño** | 1 | — | Nicolas (SOP-11 lo usa) |
-| 3 | **SOP-12 · H2 parte 2:** pantalla de confirmación con el código y botón "Copiar" (coordinar con Sebastián A.) | 1 | SOP-11 (formulario y API) | SOP-13 |
+| 1 | **SOP-36** Guía del equipo (este archivo) ✅ | 1 | — | A todos (contrato técnico) |
+| 2 | **SOP-12 · H2 parte 1:** `src/services/codigo.js` + su prueba (generador del código) — **hoy mismo, PR pequeño** ✅ | 1 | — | Nicolas (SOP-11 lo usa) |
+| 3 | **SOP-12 · H2 parte 2:** pantalla de confirmación con el código y botón "Copiar" (coordinar con Sebastián A.) ✅ | 1 | SOP-11 (formulario y API) | SOP-13 |
 | 4 | Preparar y dirigir la **Sprint Review 1** con 2 usuarios; medir el indicador | 1 | SOP-33 (v1.0) | — |
 | 5 | Repriorizar el backlog con el feedback; aceptar o rechazar historias | 1–2 | — | Planning 2 |
 
@@ -138,13 +138,13 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 
 | Orden | Tarea | Sprint | Depende de | Bloquea a |
 |---|---|---|---|---|
-| 1 | **SOP-11 · H1 parte frontend:** `public/index.html` con el formulario guiado y validaciones en el navegador. **Empieza ya contra el contrato de la sección 7.4** (no esperes la API) | 1 | — | SOP-12 parte 2 |
-| 2 | **SOP-13 · H3 parte frontend:** `public/consultar.html` con el campo del código y la línea de pasos del estado | 1 | Contrato 7.4 (probar con la API de la tarea 7 cuando esté) | Review 1 |
+| 1 | **SOP-11 · H1 parte frontend:** `public/index.html` con el formulario guiado y validaciones en el navegador. **Empieza ya contra el contrato de la sección 7.4** (no esperes la API) ✅ | 1 | — | SOP-12 parte 2 |
+| 2 | **SOP-13 · H3 parte frontend:** `public/consultar.html` con el campo del código y la línea de pasos del estado ✅ | 1 | Contrato 7.4 (probar con la API de la tarea 7 cuando esté) | Review 1 |
 | 3 | Revisar que todo funcione en celular | 1 | — | Review 1 |
 | 4 | Pantallas del técnico `public/tecnico.html` para **SOP-14, SOP-15, SOP-16, SOP-17** (con cada dueño) | 2 | API de cada historia | SOP-35 |
 | 5 | Organizar la **daily** de las 8 p. m. y guardar evidencia (captura o nota corta de cada una) | 1–2 | — | — |
 | 6 | Vigilar el tablero: WIP ≤ 2, bloqueos con *flag*, PR sin revisar > 24 h | 1–2 | — | — |
-| 7 | **SOP-13 · H3 parte backend:** `GET /api/solicitudes/:codigo` + prueba | 1 | SOP-11 parte backend | SOP-13 pantalla |
+| 7 | **SOP-13 · H3 parte backend:** `GET /api/solicitudes/:codigo` + prueba ✅ | 1 | SOP-11 parte backend | SOP-13 pantalla |
 | 8 | Registrar las **métricas Lean** al final de cada sprint: tiempo de ciclo por historia (reporte *Cycle time* de Jira) e historias terminadas | 1–2 | — | Retro |
 | 9 | Facilitar la **retrospectiva**: identificar 2 desperdicios reales, elegir 1 mejora, responsable y cómo medirla | 1–2 | Review | — |
 | 10 | **SOP-17 · H7** Asignar responsable (API + prueba; pantalla con Sebastián A.) | 2 | SOP-14 | SOP-35 |
@@ -153,7 +153,7 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 
 | Orden | Tarea | Sprint | Depende de | Bloquea a |
 |---|---|---|---|---|
-| 1 | **SOP-11 · H1 parte backend:** `src/constantes.js`, `src/schema.sql`, `src/initDb.js`, `src/repositories/solicitudes.js`, `POST /api/solicitudes` + pruebas. **Es la tarea más urgente del sprint** | 1 | SOP-12 parte 1 (si aún no está, usar un código temporal y reemplazarlo) | Sebastián A. (SOP-13), Juan Sebastián (SOP-12 parte 2), Sebastián A. (integración) |
+| 1 | **SOP-11 · H1 parte backend:** `src/constantes.js`, `src/schema.sql`, `src/initDb.js`, `src/repositories/solicitudes.js`, `POST /api/solicitudes` + pruebas. **Es la tarea más urgente del sprint** ✅ | 1 | SOP-12 parte 1 (si aún no está, usar un código temporal y reemplazarlo) | Sebastián A. (SOP-13), Juan Sebastián (SOP-12 parte 2), Sebastián A. (integración) |
 | 2 | Ayudar a que las pruebas de los demás usen pg-mem bien (sección 7.6) | 1–2 | — | — |
 | 3 | **SOP-15 · H5** Cambiar estado (API + prueba) | 2 | SOP-14 | SOP-16 |
 | 4 | **SOP-16 · H6** "Esperando tu respuesta" con nota (API + prueba) | 2 | SOP-15 | SOP-35 |
@@ -162,7 +162,7 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 
 | Orden | Tarea | Sprint | Depende de | Bloquea a |
 |---|---|---|---|---|
-| 1 | **SOP-31** CI con GitHub Actions + exigir el check en la protección de `main` — **hoy** | 1 | — (SOP-30 ya está) | Todos los PR siguientes |
+| 1 | **SOP-31** CI con GitHub Actions + exigir el check en la protección de `main` — **hoy** ✅ | 1 | — (SOP-30 ya está) | Todos los PR siguientes |
 | 2 | **SOP-32** Despliegue en Render + Neon (auto-deploy desde `main`, health check en `/health`) — **a más tardar mié 11 en la mañana** | 1 | — | Review 1, SOP-33 |
 | 3 | **SOP-33** Release v1.0 (versión `1.0.0`, tag, notas) | 1 | SOP-11, 12, 13 y 32 | Review 1 |
 | 4 | **SOP-14 · H4** Lista centralizada del técnico + middleware de clave (API + prueba) | 2 | SOP-33 | SOP-15, SOP-17 |
@@ -182,13 +182,13 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 
 ```mermaid
 flowchart LR
-  S30[SOP-30 Esqueleto ✅] --> S31[SOP-31 CI]
+  S30[SOP-30 Esqueleto ✅] --> S31[SOP-31 CI ✅]
   S30 --> S32[SOP-32 Deploy]
-  S12a[SOP-12 parte 1: codigo.js] --> S11b[SOP-11 API + BD]
-  S11b --> S13b[SOP-13 API consulta]
-  S11f[SOP-11 Formulario] --> S12b[SOP-12 parte 2: confirmación]
+  S12a[SOP-12 parte 1: codigo.js ✅] --> S11b[SOP-11 API + BD ✅]
+  S11b --> S13b[SOP-13 API consulta ✅]
+  S11f[SOP-11 Formulario ✅] --> S12b[SOP-12 parte 2: confirmación ✅]
   S11b --> S12b
-  S12b --> S13f[SOP-13 Pantalla consulta]
+  S12b --> S13f[SOP-13 Pantalla consulta ✅]
   S13b --> S13f
   S13f --> S33[SOP-33 Release v1.0]
   S32 --> S33
