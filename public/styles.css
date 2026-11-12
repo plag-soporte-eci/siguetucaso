@@ -69,3 +69,170 @@ h1 {
 .error {
   color: var(--error);
 }
+
+/* ---------- Consulta de solicitud (consultar.html, SOP-13) ---------- */
+.card-consulta {
+  text-align: left;
+}
+
+.card-consulta h1 {
+  font-size: 1.6rem;
+}
+
+.form-consulta label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.form-consulta input {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.form-consulta input:focus {
+  outline: 2px solid var(--primario);
+  border-color: var(--primario);
+}
+
+.form-consulta input.campo-invalido {
+  border-color: var(--error);
+}
+
+.mensaje-error {
+  min-height: 1.2em;
+  margin: 6px 0 12px;
+  font-size: 0.9rem;
+  color: var(--error);
+}
+
+.form-consulta button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--primario);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.form-consulta button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.resultado {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.resultado-codigo {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+}
+
+.resultado-servicio,
+.dato {
+  margin: 0 0 6px;
+  color: var(--suave);
+}
+
+/* Línea de pasos vertical: se lee bien en celular */
+.pasos {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+}
+
+.paso {
+  position: relative;
+  padding: 0 0 18px 34px;
+  color: var(--suave);
+}
+
+.paso::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+  background: var(--tarjeta);
+}
+
+/* Línea que une un paso con el siguiente */
+.paso:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 11px;
+  top: 24px;
+  bottom: 2px;
+  width: 2px;
+  background: #d1d5db;
+}
+
+.paso-hecho {
+  color: var(--texto);
+}
+
+.paso-hecho::before {
+  content: "✓";
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 20px;
+  text-align: center;
+  border-color: var(--ok);
+  background: var(--ok);
+}
+
+.paso-hecho::after {
+  background: var(--ok);
+}
+
+.paso-actual {
+  font-weight: 700;
+  color: var(--primario);
+}
+
+.paso-actual::before {
+  border-color: var(--primario);
+  background: var(--primario);
+  box-shadow: 0 0 0 4px #e0e7ff;
+}
+
+.nota {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-left: 4px solid #d97706;
+  border-radius: 6px;
+  background: #fef3c7;
+}
+
+.nota p {
+  margin: 0;
+}
+
+.nota-titulo {
+  margin-bottom: 4px !important;
+  font-weight: 600;
+}
+
+.volver {
+  margin: 24px 0 0;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.volver a {
+  color: var(--primario);
+}
