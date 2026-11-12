@@ -4,6 +4,7 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const healthRouter = require('./routes/health');
+const solicitudesRouter = require('./routes/solicitudes');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 // Rutas de la API
 app.use(healthRouter);
+app.use(solicitudesRouter);
 
 // Archivos del frontend (HTML, CSS y JS) en la carpeta public/
 app.use(express.static(path.join(__dirname, '..', 'public')));
