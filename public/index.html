@@ -9,7 +9,7 @@
 <body>
   <main class="card card-formulario">
     <h1>Reporta tu problema</h1>
-    <p class="lead">
+    <p id="intro" class="lead">
       Cuéntanos qué pasa una sola vez. Te daremos un código para que consultes
       en qué va, sin iniciar sesión.
     </p>
@@ -73,15 +73,27 @@
       <button id="boton-enviar" type="submit">Enviar solicitud</button>
     </form>
 
-    <!-- Confirmación básica. La pantalla completa (botón "Copiar") es SOP-12 parte 2. -->
+    <!-- Confirmación con el código de seguimiento (SOP-40, H2 parte 2).
+         Se muestra cuando POST /api/solicitudes responde 201. -->
     <section id="confirmacion" class="confirmacion" hidden aria-live="polite">
       <h2>¡Recibimos tu solicitud!</h2>
-      <p>Guarda este código para consultar en qué va:</p>
-      <p id="codigo-generado" class="codigo-generado"></p>
-      <p><a id="enlace-consulta" href="consultar.html">Consultar mi solicitud</a></p>
+      <p>Este es tu código de seguimiento:</p>
+      <!-- tabindex="-1" permite llevar el foco al código para lectores de pantalla -->
+      <p id="codigo-generado" class="codigo-generado" tabindex="-1"></p>
+
+      <button id="boton-copiar" class="boton-copiar" type="button">Copiar código</button>
+      <p id="mensaje-copiar" class="mensaje-copiar" role="status"></p>
+
+      <p class="aviso-guardar">
+        <strong>Guárdalo:</strong> con este código consultas en qué va tu solicitud,
+        sin iniciar sesión. Puedes copiarlo, tomarle una captura o anotarlo.
+      </p>
+
+      <a id="enlace-consulta" class="boton-consultar" href="consultar.html">Consultar mi solicitud</a>
+      <p class="volver"><a href="index.html">Reportar otro problema</a></p>
     </section>
 
-    <p class="volver"><a href="consultar.html">Ya tengo un código: consultar mi solicitud</a></p>
+    <p id="enlace-ya-tengo" class="volver"><a href="consultar.html">Ya tengo un código: consultar mi solicitud</a></p>
   </main>
   <script src="js/index.js"></script>
 </body>
