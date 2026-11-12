@@ -1,6 +1,6 @@
 {
   "name": "siguetucaso",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Reporta tu problema una sola vez, con lo necesario, y consulta cuando quieras en qué va, sin tener que escribirle a nadie.",
   "main": "src/server.js",
