@@ -3,19 +3,86 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SigueTuCaso – Solicitudes de soporte</title>
+  <title>SigueTuCaso – Reporta tu problema</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="card">
-    <h1>SigueTuCaso</h1>
+  <main class="card card-formulario">
+    <h1>Reporta tu problema</h1>
     <p class="lead">
-      Reporta tu problema una sola vez y consulta cuando quieras en qué va,
-      sin tener que escribirle a nadie.
+      Cuéntanos qué pasa una sola vez. Te daremos un código para que consultes
+      en qué va, sin iniciar sesión.
     </p>
-    <p class="badge">Próximamente</p>
-    <p class="status">Estado del servicio: <span id="estado">verificando…</span></p>
+
+    <!-- Formulario guiado: solo los campos del contrato (AGENTS.md, sección 7.4) -->
+    <form id="form-solicitud" class="formulario" novalidate>
+      <!-- Paso 1: quién eres -->
+      <fieldset>
+        <legend><span class="numero-paso">1</span> ¿Quién eres?</legend>
+
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" type="text" autocomplete="name" maxlength="120"
+               aria-describedby="error-nombre" required>
+        <p id="error-nombre" class="mensaje-error" role="alert"></p>
+
+        <label for="correo">Correo</label>
+        <input id="correo" name="correo" type="email" autocomplete="email" inputmode="email"
+               maxlength="160" placeholder="nombre@correo.com"
+               aria-describedby="ayuda-correo error-correo" required>
+        <p id="ayuda-correo" class="ayuda">Solo lo usa el técnico si necesita contactarte.</p>
+        <p id="error-correo" class="mensaje-error" role="alert"></p>
+      </fieldset>
+
+      <!-- Paso 2: qué pasa -->
+      <fieldset>
+        <legend><span class="numero-paso">2</span> ¿Qué pasa?</legend>
+
+        <label for="servicio">¿Con qué tienes el problema?</label>
+        <select id="servicio" name="servicio" aria-describedby="error-servicio" required>
+          <option value="">Elige una opción</option>
+          <!-- Las opciones se llenan desde js/index.js con los SERVICIOS del contrato -->
+        </select>
+        <p id="error-servicio" class="mensaje-error" role="alert"></p>
+
+        <label for="descripcion">Describe el problema</label>
+        <textarea id="descripcion" name="descripcion" rows="4" maxlength="1000"
+                  placeholder="Ejemplo: no puedo entrar a la plataforma, me sale 'usuario bloqueado'."
+                  aria-describedby="contador-descripcion error-descripcion" required></textarea>
+        <p id="contador-descripcion" class="ayuda">0 / 1000 caracteres</p>
+        <p id="error-descripcion" class="mensaje-error" role="alert"></p>
+      </fieldset>
+
+      <!-- Paso 3: datos opcionales que ayudan al técnico -->
+      <fieldset>
+        <legend><span class="numero-paso">3</span> Si quieres, cuéntanos más <span class="opcional">(opcional)</span></legend>
+
+        <label for="desdeCuando">¿Desde cuándo pasa?</label>
+        <input id="desdeCuando" name="desdeCuando" type="text" maxlength="120"
+               placeholder="Ejemplo: desde ayer en la tarde" aria-describedby="error-desdeCuando">
+        <p id="error-desdeCuando" class="mensaje-error" role="alert"></p>
+
+        <label for="queIntento">¿Qué intentaste?</label>
+        <textarea id="queIntento" name="queIntento" rows="2" maxlength="500"
+                  placeholder="Ejemplo: reinicié el computador y cambié de navegador."
+                  aria-describedby="error-queIntento"></textarea>
+        <p id="error-queIntento" class="mensaje-error" role="alert"></p>
+      </fieldset>
+
+      <!-- Error general (por ejemplo, sin conexión) -->
+      <p id="error-general" class="mensaje-error" role="alert"></p>
+      <button id="boton-enviar" type="submit">Enviar solicitud</button>
+    </form>
+
+    <!-- Confirmación básica. La pantalla completa (botón "Copiar") es SOP-12 parte 2. -->
+    <section id="confirmacion" class="confirmacion" hidden aria-live="polite">
+      <h2>¡Recibimos tu solicitud!</h2>
+      <p>Guarda este código para consultar en qué va:</p>
+      <p id="codigo-generado" class="codigo-generado"></p>
+      <p><a id="enlace-consulta" href="consultar.html">Consultar mi solicitud</a></p>
+    </section>
+
+    <p class="volver"><a href="consultar.html">Ya tengo un código: consultar mi solicitud</a></p>
   </main>
-  <script src="app.js"></script>
+  <script src="js/index.js"></script>
 </body>
 </html>

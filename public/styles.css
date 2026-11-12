@@ -236,3 +236,121 @@ h1 {
 .volver a {
   color: var(--primario);
 }
+
+/* ---------- Formulario de reporte (index.html, SOP-38) ---------- */
+.card-formulario {
+  text-align: left;
+}
+
+.card-formulario h1 {
+  font-size: 1.6rem;
+}
+
+.formulario fieldset {
+  margin: 0 0 16px;
+  padding: 0;
+  border: none;
+}
+
+.formulario legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.numero-paso {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--primario);
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.opcional {
+  font-weight: 400;
+  color: var(--suave);
+}
+
+.formulario label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.formulario input,
+.formulario select,
+.formulario textarea {
+  width: 100%;
+  padding: 12px;
+  font: inherit;
+  font-size: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.formulario textarea {
+  resize: vertical;
+}
+
+.formulario input:focus,
+.formulario select:focus,
+.formulario textarea:focus {
+  outline: 2px solid var(--primario);
+  border-color: var(--primario);
+}
+
+.formulario .campo-invalido {
+  border-color: var(--error);
+}
+
+.ayuda {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: var(--suave);
+}
+
+.formulario button {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--primario);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.formulario button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.confirmacion {
+  text-align: center;
+}
+
+.confirmacion h2 {
+  margin: 0 0 8px;
+  color: var(--ok);
+}
+
+.codigo-generado {
+  margin: 12px 0;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--primario);
+}
+
+.confirmacion a {
+  color: var(--primario);
+}
