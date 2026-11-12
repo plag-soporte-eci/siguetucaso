@@ -1,5 +1,7 @@
 # SigueTuCaso – Solicitudes de soporte
 
+[![CI](https://github.com/plag-soporte-eci/siguetucaso/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/plag-soporte-eci/siguetucaso/actions/workflows/ci.yml)
+
 Reporta tu problema una sola vez, con lo necesario, y consulta cuando quieras en qué va, sin tener que escribirle a nadie.
 
 Proyecto final de **Pensamiento Lean y Agile** – Escuela Colombiana de Ingeniería Julio Garavito.
@@ -66,6 +68,7 @@ tests/              # pruebas con Jest + Supertest
    ```bash
    npm test
    ```
+   Las mismas pruebas corren solas en GitHub Actions ([`ci.yml`](.github/workflows/ci.yml)) en cada push y Pull Request hacia `main`; un PR con pruebas en rojo no se puede integrar.
 7. **Verificar `/health`:** con el servidor corriendo, abrir http://localhost:3000/health o:
    ```bash
    curl http://localhost:3000/health

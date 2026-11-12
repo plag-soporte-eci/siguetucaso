@@ -1,0 +1,45 @@
+# Integración continua (SOP-31).
+# Corre las pruebas automáticamente cada vez que alguien sube cambios a main
+# o abre / actualiza un Pull Request hacia main. Si una prueba falla,
+# el check queda en rojo y la protección de main no deja integrar el PR.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Si se suben commits nuevos al mismo PR, se cancela la ejecución anterior
+# para no gastar tiempo en una versión que ya no importa.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pruebas:
+    name: Pruebas (npm test)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # 1. Descarga el código del repositorio
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      # 2. Instala Node 20 (la versión del proyecto) y guarda en caché las dependencias
+      - name: Instalar Node 20
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3. Instala exactamente las versiones de package-lock.json
+      - name: Instalar dependencias
+        run: npm ci
+
+      # 4. Ejecuta las pruebas (Jest + Supertest + pg-mem, sin base real)
+      - name: Ejecutar pruebas
+        run: npm test
+        env:
+          NODE_ENV: test
