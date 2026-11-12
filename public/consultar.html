@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consultar mi solicitud – SigueTuCaso</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="card card-consulta">
+    <h1>Consulta tu solicitud</h1>
+    <p class="lead">
+      Escribe el código que recibiste al reportar tu problema.
+      No necesitas iniciar sesión.
+    </p>
+
+    <!-- Formulario: solo pide el código de seguimiento -->
+    <form id="form-consulta" class="form-consulta" novalidate>
+      <label for="codigo">Código de seguimiento</label>
+      <input
+        id="codigo"
+        name="codigo"
+        type="text"
+        placeholder="TK-XXXX"
+        autocomplete="off"
+        autocapitalize="characters"
+        spellcheck="false"
+        maxlength="20"
+        aria-describedby="error-codigo"
+        required
+      >
+      <!-- Aquí se muestra el error junto al campo -->
+      <p id="error-codigo" class="mensaje-error" role="alert"></p>
+      <button id="boton-consultar" type="submit">Consultar</button>
+    </form>
+
+    <!-- Resultado: se llena con JavaScript cuando la API responde -->
+    <section id="resultado" class="resultado" hidden aria-live="polite">
+      <p class="resultado-codigo">Solicitud <strong id="res-codigo"></strong></p>
+      <p class="resultado-servicio">Servicio: <span id="res-servicio"></span></p>
+
+      <!-- Línea de pasos del estado -->
+      <ol id="pasos" class="pasos"></ol>
+
+      <!-- Solo aparece si el técnico necesita algo de la persona -->
+      <div id="caja-nota" class="nota" hidden>
+        <p class="nota-titulo">El técnico necesita esto de ti:</p>
+        <p id="res-nota"></p>
+      </div>
+
+      <p id="linea-responsable" class="dato" hidden>
+        Te atiende: <span id="res-responsable"></span>
+      </p>
+      <p class="dato">Reportada: <span id="res-creado"></span></p>
+      <p class="dato">Última actualización: <span id="res-actualizado"></span></p>
+    </section>
+
+    <p class="volver"><a href="/">Reportar un problema nuevo</a></p>
+  </main>
+  <script src="js/consultar.js"></script>
+</body>
+</html>
