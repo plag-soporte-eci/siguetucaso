@@ -87,7 +87,37 @@ Ver [CONTRIBUTING.md](CONTRIBUTING.md) y la [Definición de Terminado](docs/defi
 | v1.0 | 1 | Registrar solicitud y consultar estado con código |
 | v2.0 | 2 | Panel del técnico |
 
-Rollback: _(se documenta en el Sprint 2)_
+Rollback: ver [Operación: logs, salud y rollback](#operación-logs-salud-y-rollback).
+
+## Operación: logs, salud y rollback
+
+### Logs
+- **Dónde verlos:** en Render → servicio → **Logs** (en vivo y con buscador). Los deploys y los rollbacks aparecen en **Events**.
+- **Qué registra la app:**
+  - Al arrancar: `SigueTuCaso v<versión> escuchando en …` y si la base está configurada o no (nunca imprime la cadena de conexión).
+  - Cada petición (morgan): método, ruta, código de respuesta y tiempo. Ejemplo: `GET /health 200 5.0 ms`.
+  - Errores de la base: `Error al verificar la base de datos: <mensaje>`.
+- **Sin claves en los logs:** morgan no registra encabezados (la clave del técnico viaja en `X-Tecnico-Clave`) y ningún `console.log` imprime `DATABASE_URL` ni `TECNICO_PASSWORD`.
+
+### Salud
+- `GET /health` responde `status`, `version` (sale de `package.json`), `db` (`ok`, `sin configurar` o `error`) y `time`.
+- Render lo consulta cada pocos segundos (health check configurado en `/health`). Si un deploy nuevo no responde, Render no le pasa tráfico y deja funcionando la versión anterior.
+- `/health` responde 200 aunque la base falle: la app sigue viva, pero `db: "error"` significa que hay que revisar Neon.
+
+### Rollback: volver a la última versión que funcionaba
+1. **Detectar el fallo:** health check en rojo en Render, `db: "error"` o una `version` inesperada en `/health`, o errores en **Logs**.
+2. **Volver atrás:** Render → servicio → **Deploys** (o **Events**) → elegir el último deploy bueno → **Rollback** → confirmar. Render reutiliza el build anterior, así que tarda poco.
+3. **Verificar:** abrir `/health` y confirmar que `version` volvió a la anterior. Para eso cada release sube la versión en `package.json` (v1.0 → `1.0.0`, v2.0 → `2.0.0`).
+4. **Corregir:** arreglar en una rama `fix/SOP-X-…` → PR → CI en verde → merge.
+5. **Reactivar el auto-deploy:** el rollback desde el panel de Render **apaga el auto-deploy** para que un commit nuevo no vuelva a subir el error. Después del merge de la corrección, volver a **Settings → Build & Deploy → Auto-Deploy: After CI Checks Pass**.
+6. **Registrar:** comentario en la tarjeta de Jira con qué falló, a qué versión se volvió y cómo se corrigió.
+
+El rollback devuelve el código, no los datos: las solicitudes guardadas en Neon se mantienen. Como la tabla se creó completa desde el Sprint 1, volver a una versión anterior no rompe la base.
+
+### Simulacro de rollback
+| Fecha | De → a | Tiempo hasta `/health` con la versión anterior | Evidencia |
+|---|---|---|---|
+| _pendiente_ | v2.0 → v1.0 → v2.0 | | Capturas adjuntas en SOP-34 (Jira) |
 
 ## Componentes reutilizados y uso de IA
 | Componente / herramienta | Uso | Licencia |
