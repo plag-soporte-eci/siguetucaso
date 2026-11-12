@@ -67,4 +67,19 @@ async function crearSolicitud(datos) {
   }
 }
 
-module.exports = { crearSolicitud, convertirSolicitud };
+// Busca una solicitud por su código (SOP-41). El código debe llegar ya normalizado.
+// Devuelve la solicitud completa en camelCase, o null si no existe.
+async function buscarPorCodigo(codigo) {
+  if (!db.pool) {
+    throw new Error('La base de datos no está configurada');
+  }
+
+  const resultado = await db.pool.query('SELECT * FROM solicitudes WHERE codigo = $1', [codigo]);
+
+  if (resultado.rows.length === 0) {
+    return null;
+  }
+  return convertirSolicitud(resultado.rows[0]);
+}
+
+module.exports = { crearSolicitud, convertirSolicitud, buscarPorCodigo };
