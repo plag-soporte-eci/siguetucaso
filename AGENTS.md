@@ -40,7 +40,7 @@
 |---|---|
 | Tablero Jira | https://plag-soporte-eci.atlassian.net/jira/software/projects/SOP/boards/1 |
 | Repositorio | https://github.com/plag-soporte-eci/siguetucaso |
-| Demo desplegada | _(la publica David en SOP-32)_ |
+| Demo desplegada | https://siguetucaso.onrender.com (salud: `/health`) |
 
 ---
 
@@ -163,8 +163,8 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 | Orden | Tarea | Sprint | Depende de | Bloquea a |
 |---|---|---|---|---|
 | 1 | **SOP-31** CI con GitHub Actions + exigir el check en la protección de `main` — **hoy** ✅ | 1 | — (SOP-30 ya está) | Todos los PR siguientes |
-| 2 | **SOP-32** Despliegue en Render + Neon (auto-deploy desde `main`, health check en `/health`) — **a más tardar mié 11 en la mañana** | 1 | — | Review 1, SOP-33 |
-| 3 | **SOP-33** Release v1.0 (versión `1.0.0`, tag, notas) | 1 | SOP-11, 12, 13 y 32 | Review 1 |
+| 2 | **SOP-32** Despliegue en Render + Neon (auto-deploy desde `main`, health check en `/health`) — **a más tardar mié 11 en la mañana** ✅ | 1 | — | Review 1, SOP-33 |
+| 3 | **SOP-33** Release v1.0 (versión `1.0.0`, tag, notas) ✅ | 1 | SOP-11, 12, 13 y 32 | Review 1 |
 | 4 | **SOP-14 · H4** Lista centralizada del técnico + middleware de clave (API + prueba) | 2 | SOP-33 | SOP-15, SOP-17 |
 | 5 | **SOP-34** Logs, salud y rollback (con simulacro y capturas) | 2 | SOP-32 | — |
 | 6 | **SOP-35** Release v2.0 | 2 | SOP-14 a 17 | Review 2 |
@@ -183,14 +183,14 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 ```mermaid
 flowchart LR
   S30[SOP-30 Esqueleto ✅] --> S31[SOP-31 CI ✅]
-  S30 --> S32[SOP-32 Deploy]
+  S30 --> S32[SOP-32 Deploy ✅]
   S12a[SOP-12 parte 1: codigo.js ✅] --> S11b[SOP-11 API + BD ✅]
   S11b --> S13b[SOP-13 API consulta ✅]
   S11f[SOP-11 Formulario ✅] --> S12b[SOP-12 parte 2: confirmación ✅]
   S11b --> S12b
   S12b --> S13f[SOP-13 Pantalla consulta ✅]
   S13b --> S13f
-  S13f --> S33[SOP-33 Release v1.0]
+  S13f --> S33[SOP-33 Release v1.0 ✅]
   S32 --> S33
   S33 --> S14[SOP-14 Lista técnico]
   S14 --> S15[SOP-15 Cambiar estado]
