@@ -149,6 +149,7 @@ Rollback: ver [Operación: logs, salud y rollback](#operación-logs-salud-y-roll
   - Cada petición (morgan): método, ruta, código de respuesta y tiempo. Ejemplo: `GET /health 200 5.0 ms`.
   - Errores de la base: `Error al verificar la base de datos: <mensaje>`.
 - **Sin claves en los logs:** morgan no registra encabezados (la clave del técnico viaja en `X-Tecnico-Clave`) y ningún `console.log` imprime `DATABASE_URL` ni `TECNICO_PASSWORD`.
+- **Aviso conocido al arrancar:** `SECURITY WARNING: The SSL modes 'prefer', 'require', and 'verify-ca' are treated as aliases for 'verify-full'`. Lo imprime la librería `pg` por el `sslmode=require` de la cadena de Neon; no es un error y la conexión es segura. Desaparece si en Render se cambia `sslmode=require` por `sslmode=verify-full` en `DATABASE_URL`.
 
 ### Salud
 - `GET /health` responde `status`, `version` (sale de `package.json`), `db` (`ok`, `sin configurar` o `error`) y `time`.
@@ -166,9 +167,15 @@ Rollback: ver [Operación: logs, salud y rollback](#operación-logs-salud-y-roll
 El rollback devuelve el código, no los datos: las solicitudes guardadas en Neon se mantienen. Como la tabla se creó completa desde el Sprint 1, volver a una versión anterior no rompe la base.
 
 ### Simulacro de rollback
-| Fecha | De → a | Tiempo hasta `/health` con la versión anterior | Evidencia |
+Se hizo el 18 de noviembre de 2026 en la demo de Render: se volvió de la v1.0.0 al deploy anterior (`7f459c6`, versión `0.1.0`) y luego se regresó a la v1.0.0 (`06bdf69`). Los tiempos van desde el clic en **Rollback** hasta que `/health` mostró la versión esperada.
+
+| Fecha | De → a | Tiempo hasta que `/health` muestra la versión | Evidencia |
 |---|---|---|---|
-| _pendiente_ | v2.0 → v1.0 → v2.0 | | Capturas adjuntas en SOP-34 (Jira) |
+| 18 nov 2026, 4:44 p. m. | `1.0.0` → `0.1.0` (rollback al deploy `7f459c6`) | ≈ 42 s (inicio 4:44:52 → `/health` con `0.1.0` a las 4:45:34) | Capturas adjuntas en SOP-34 (Jira) |
+| 18 nov 2026, 4:46 p. m. | `0.1.0` → `1.0.0` (regreso al deploy `06bdf69`) | ≈ 28 s (inicio 4:46:32 → `/health` con `1.0.0` a las 4:47:00) | Capturas adjuntas en SOP-34 (Jira) |
+
+- En ambos casos `/health` respondió `"status": "ok"` y `"db": "ok"`: el rollback cambia el código, no los datos de Neon.
+- Búsqueda de `TECNICO` en los logs de la aplicación: sin resultados (ninguna clave expuesta).
 
 ## Componentes reutilizados y uso de IA
 | Componente / herramienta | Uso | Licencia |
