@@ -1,0 +1,72 @@
+// API del técnico (SOP-14, contrato sección 7.4).
+// Todas las rutas que empiezan por /api/tecnico exigen la clave del técnico
+// en el encabezado X-Tecnico-Clave (lo valida el middleware tecnicoAuth).
+// Las rutas no escriben SQL: llaman funciones de repositories/solicitudes.js.
+const express = require('express');
+const tecnicoAuth = require('../middleware/tecnicoAuth');
+const { ESTADOS } = require('../constantes');
+const {
+  listarSolicitudes,
+  contarAbiertas,
+  buscarPorCodigo,
+} = require('../repositories/solicitudes');
+const { normalizarCodigo, esCodigoValido } = require('../services/codigo');
+
+const router = express.Router();
+
+const NO_ENCONTRADA = 'No encontramos una solicitud con ese código. Revisa que esté bien escrito.';
+
+// Primero la clave: si no es correcta, ninguna ruta de abajo se ejecuta (401).
+router.use('/api/tecnico', tecnicoAuth);
+
+// GET /api/tecnico/solicitudes?estado=
+// Devuelve { abiertas, solicitudes } con TODOS los campos, más recientes primero.
+// "abiertas" cuenta todas las que no están "Resuelta", sin importar el filtro.
+router.get('/api/tecnico/solicitudes', async (req, res) => {
+  const estado = typeof req.query.estado === 'string' ? req.query.estado.trim() : '';
+
+  // Sin estado = "Todas". Con estado, debe ser uno de los 4 del contrato.
+  if (estado && !ESTADOS.includes(estado)) {
+    return res.status(400).json({ error: 'Estado no válido.' });
+  }
+
+  try {
+    const solicitudes = await listarSolicitudes(estado || null);
+    const abiertas = await contarAbiertas();
+
+    return res.status(200).json({ abiertas, solicitudes });
+  } catch (error) {
+    console.error('Error al listar las solicitudes del técnico:', error.message);
+    return res.status(500).json({
+      error: 'No pudimos cargar las solicitudes. Intenta de nuevo.',
+    });
+  }
+});
+
+// GET /api/tecnico/solicitudes/:codigo
+// Detalle completo de una solicitud (a diferencia de la consulta pública,
+// aquí SÍ van el nombre, el correo, desde cuándo y qué intentó).
+router.get('/api/tecnico/solicitudes/:codigo', async (req, res) => {
+  // Igual que la consulta pública: acepta minúsculas y espacios.
+  const codigo = normalizarCodigo(req.params.codigo);
+
+  if (!esCodigoValido(codigo)) {
+    return res.status(404).json({ error: NO_ENCONTRADA });
+  }
+
+  try {
+    const solicitud = await buscarPorCodigo(codigo);
+
+    if (!solicitud) {
+      return res.status(404).json({ error: NO_ENCONTRADA });
+    }
+    return res.status(200).json(solicitud);
+  } catch (error) {
+    console.error('Error al consultar el detalle de la solicitud:', error.message);
+    return res.status(500).json({
+      error: 'No pudimos cargar la solicitud. Intenta de nuevo.',
+    });
+  }
+});
+
+module.exports = router;
