@@ -82,4 +82,47 @@ async function buscarPorCodigo(codigo) {
   return convertirSolicitud(resultado.rows[0]);
 }
 
-module.exports = { crearSolicitud, convertirSolicitud, buscarPorCodigo };
+// ---------- SOP-14: consultas del panel del técnico ----------
+
+// Lista las solicitudes de la más reciente a la más antigua.
+// Si llega un estado (ej. "En revisión"), solo devuelve las que tienen ese estado.
+// Si dos solicitudes tienen la misma fecha, el id desempata (la última creada va primero).
+async function listarSolicitudes(estado) {
+  if (!db.pool) {
+    throw new Error('La base de datos no está configurada');
+  }
+
+  let consulta = 'SELECT * FROM solicitudes';
+  const parametros = [];
+
+  if (estado) {
+    consulta += ' WHERE estado = $1';
+    parametros.push(estado);
+  }
+  consulta += ' ORDER BY creado_en DESC, id DESC';
+
+  const resultado = await db.pool.query(consulta, parametros);
+  return resultado.rows.map(convertirSolicitud);
+}
+
+// Cuenta las solicitudes abiertas: todas las que NO están en "Resuelta".
+async function contarAbiertas() {
+  if (!db.pool) {
+    throw new Error('La base de datos no está configurada');
+  }
+
+  const resultado = await db.pool.query(
+    'SELECT COUNT(*) AS total FROM solicitudes WHERE estado <> $1',
+    ['Resuelta'],
+  );
+  // PostgreSQL devuelve COUNT como texto; Number() lo convierte en número.
+  return Number(resultado.rows[0].total);
+}
+
+module.exports = {
+  crearSolicitud,
+  convertirSolicitud,
+  buscarPorCodigo,
+  listarSolicitudes,
+  contarAbiertas,
+};

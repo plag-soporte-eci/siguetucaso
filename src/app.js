@@ -5,6 +5,7 @@ const express = require('express');
 const morgan = require('morgan');
 const healthRouter = require('./routes/health');
 const solicitudesRouter = require('./routes/solicitudes');
+const tecnicoRouter = require('./routes/tecnico');
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 // Rutas de la API
 app.use(healthRouter);
 app.use(solicitudesRouter);
+app.use(tecnicoRouter); // SOP-14: API del técnico (exige X-Tecnico-Clave)
 
 // Archivos del frontend (HTML, CSS y JS) en la carpeta public/
 app.use(express.static(path.join(__dirname, '..', 'public')));
