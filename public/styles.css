@@ -403,3 +403,192 @@ h1 {
   background: var(--primario);
   border-radius: 8px;
 }
+
+/* ---------- Panel del técnico (tecnico.html, SOP-14 y SOP-17) ---------- */
+.card-tecnico {
+  max-width: 760px;
+  text-align: left;
+}
+
+.card-tecnico h1 {
+  font-size: 1.6rem;
+}
+
+/* Oculta un texto a la vista, pero lo deja para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.panel-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.abiertas {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.abiertas strong {
+  font-size: 1.6rem;
+  color: var(--primario);
+}
+
+.panel-acciones {
+  display: flex;
+  gap: 8px;
+}
+
+.panel-acciones select {
+  padding: 10px;
+  font: inherit;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.boton-secundario {
+  padding: 10px 14px;
+  font: inherit;
+  color: var(--primario);
+  background: #fff;
+  border: 1px solid var(--primario);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.lista-solicitudes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.solicitud {
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.solicitud p {
+  margin: 4px 0;
+}
+
+.solicitud-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.s-servicio {
+  font-weight: 600;
+}
+
+.s-descripcion {
+  color: var(--suave);
+  overflow-wrap: anywhere;
+}
+
+.etiqueta-estado {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #e5e7eb;
+}
+
+.estado-recibida { background: #e0e7ff; color: var(--primario); }
+.estado-en-revision { background: #dbeafe; color: #1e40af; }
+.estado-esperando-tu-respuesta { background: #fef3c7; color: #92400e; }
+.estado-resuelta { background: #dcfce7; color: var(--ok); }
+
+.solicitud details {
+  margin: 8px 0;
+}
+
+.solicitud summary {
+  cursor: pointer;
+  color: var(--primario);
+}
+
+.detalle {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 12px;
+  margin: 8px 0 0;
+}
+
+.detalle dt {
+  font-weight: 600;
+}
+
+.detalle dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.form-responsable {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.form-responsable label {
+  flex: 1 1 200px;
+  font-weight: 600;
+}
+
+.form-responsable input {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px;
+  font: inherit;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+}
+
+.form-responsable input.campo-invalido {
+  border-color: var(--error);
+}
+
+.form-responsable button {
+  padding: 10px 16px;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--primario);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.form-responsable button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.form-responsable .mensaje-error,
+.form-responsable .mensaje-ok {
+  flex-basis: 100%;
+  min-height: 0;
+  margin: 0;
+}
+
+.mensaje-ok {
+  font-size: 0.9rem;
+  color: var(--ok);
+}

@@ -9,6 +9,7 @@ const {
   listarSolicitudes,
   contarAbiertas,
   buscarPorCodigo,
+  asignarResponsable,
 } = require('../repositories/solicitudes');
 const { normalizarCodigo, esCodigoValido } = require('../services/codigo');
 
@@ -65,6 +66,50 @@ router.get('/api/tecnico/solicitudes/:codigo', async (req, res) => {
     console.error('Error al consultar el detalle de la solicitud:', error.message);
     return res.status(500).json({
       error: 'No pudimos cargar la solicitud. Intenta de nuevo.',
+    });
+  }
+});
+
+// ---------- SOP-17: asignar responsable ----------
+
+const MAX_RESPONSABLE = 100;
+
+// PATCH /api/tecnico/solicitudes/:codigo/responsable  con cuerpo { responsable }
+// Guarda quién atiende la solicitud. El solicitante lo ve en la consulta pública.
+router.patch('/api/tecnico/solicitudes/:codigo/responsable', async (req, res) => {
+  const codigo = normalizarCodigo(req.params.codigo);
+  const cuerpo = req.body && typeof req.body === 'object' ? req.body : {};
+  const responsable = typeof cuerpo.responsable === 'string' ? cuerpo.responsable.trim() : '';
+
+  // Validación: el nombre es obligatorio y corto (se muestra en la pantalla del solicitante).
+  if (!responsable) {
+    return res.status(400).json({
+      error: 'Revisa los campos marcados.',
+      campos: { responsable: 'Escribe el nombre de quien atiende la solicitud.' },
+    });
+  }
+  if (responsable.length > MAX_RESPONSABLE) {
+    return res.status(400).json({
+      error: 'Revisa los campos marcados.',
+      campos: { responsable: `El nombre puede tener máximo ${MAX_RESPONSABLE} caracteres.` },
+    });
+  }
+
+  if (!esCodigoValido(codigo)) {
+    return res.status(404).json({ error: NO_ENCONTRADA });
+  }
+
+  try {
+    const solicitud = await asignarResponsable(codigo, responsable);
+
+    if (!solicitud) {
+      return res.status(404).json({ error: NO_ENCONTRADA });
+    }
+    return res.status(200).json(solicitud);
+  } catch (error) {
+    console.error('Error al asignar el responsable:', error.message);
+    return res.status(500).json({
+      error: 'No pudimos asignar el responsable. Intenta de nuevo.',
     });
   }
 });
