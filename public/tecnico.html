@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Panel del técnico – SigueTuCaso</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="card card-tecnico">
+    <h1>Panel del técnico</h1>
+
+    <!-- Paso 1: la clave del técnico (se guarda en sessionStorage, AGENTS.md 7.7) -->
+    <form id="form-clave" class="formulario" novalidate hidden>
+      <label for="clave">Clave del técnico</label>
+      <input id="clave" name="clave" type="password" autocomplete="current-password"
+             aria-describedby="error-clave" required>
+      <p id="error-clave" class="mensaje-error" role="alert"></p>
+      <button type="submit">Entrar</button>
+    </form>
+
+    <!-- Paso 2: la lista de solicitudes (SOP-14) con la asignación de responsable (SOP-17) -->
+    <section id="panel" hidden>
+      <div class="panel-barra">
+        <p class="abiertas"><strong id="total-abiertas">0</strong> <span id="texto-abiertas">abiertas</span></p>
+        <div class="panel-acciones">
+          <label for="filtro-estado" class="sr-only">Filtrar por estado</label>
+          <select id="filtro-estado">
+            <option value="">Todas</option>
+            <!-- Los estados se llenan desde js/tecnico.js -->
+          </select>
+          <button id="boton-salir" type="button" class="boton-secundario">Salir</button>
+        </div>
+      </div>
+
+      <p id="error-panel" class="mensaje-error" role="alert"></p>
+      <p id="sin-solicitudes" class="ayuda" hidden>No hay solicitudes con este estado.</p>
+      <ul id="lista-solicitudes" class="lista-solicitudes"></ul>
+    </section>
+  </main>
+
+  <!-- Plantilla de cada solicitud: js/tecnico.js la copia y llena con textContent -->
+  <template id="plantilla-solicitud">
+    <li class="solicitud">
+      <div class="solicitud-cabecera">
+        <strong class="s-codigo"></strong>
+        <span class="etiqueta-estado s-estado"></span>
+      </div>
+      <p class="s-servicio"></p>
+      <p class="s-descripcion"></p>
+      <details>
+        <summary>Ver detalle</summary>
+        <dl class="detalle">
+          <dt>Nombre</dt><dd class="s-nombre"></dd>
+          <dt>Correo</dt><dd class="s-correo"></dd>
+          <dt>Desde cuándo</dt><dd class="s-desde"></dd>
+          <dt>Qué intentó</dt><dd class="s-intento"></dd>
+          <dt>Reportada</dt><dd class="s-creado"></dd>
+          <dt>Última actualización</dt><dd class="s-actualizado"></dd>
+        </dl>
+      </details>
+
+      <!-- SOP-17: asignar o cambiar el responsable -->
+      <form class="form-responsable" novalidate>
+        <label>Responsable
+          <input class="s-responsable" name="responsable" type="text" maxlength="100"
+                 placeholder="Nombre de quien la atiende">
+        </label>
+        <button type="submit">Asignar</button>
+        <p class="mensaje-error s-error" role="alert"></p>
+        <p class="mensaje-ok s-ok" role="status"></p>
+      </form>
+    </li>
+  </template>
+
+  <script src="js/tecnico.js"></script>
+</body>
+</html>
