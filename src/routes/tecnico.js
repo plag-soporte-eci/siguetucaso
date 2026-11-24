@@ -10,6 +10,7 @@ const {
   contarAbiertas,
   buscarPorCodigo,
   asignarResponsable,
+  cambiarEstado,
 } = require('../repositories/solicitudes');
 const { normalizarCodigo, esCodigoValido } = require('../services/codigo');
 
@@ -110,6 +111,41 @@ router.patch('/api/tecnico/solicitudes/:codigo/responsable', async (req, res) =>
     console.error('Error al asignar el responsable:', error.message);
     return res.status(500).json({
       error: 'No pudimos asignar el responsable. Intenta de nuevo.',
+    });
+  }
+});
+
+// ---------- SOP-15: cambiar estado ----------
+
+// PATCH /api/tecnico/solicitudes/:codigo/estado con cuerpo { estado }
+// Cambia el estado y actualiza actualizado_en. SOP-16 implementará la nota.
+router.patch('/api/tecnico/solicitudes/:codigo/estado', async (req, res) => {
+  const codigo = normalizarCodigo(req.params.codigo);
+  const cuerpo = req.body && typeof req.body === 'object' ? req.body : {};
+  const estado = typeof cuerpo.estado === 'string' ? cuerpo.estado.trim() : '';
+
+  if (!ESTADOS.includes(estado)) {
+    return res.status(400).json({
+      error: 'Revisa los campos marcados.',
+      campos: { estado: 'Selecciona un estado válido.' },
+    });
+  }
+
+  if (!esCodigoValido(codigo)) {
+    return res.status(404).json({ error: NO_ENCONTRADA });
+  }
+
+  try {
+    const solicitud = await cambiarEstado(codigo, estado);
+
+    if (!solicitud) {
+      return res.status(404).json({ error: NO_ENCONTRADA });
+    }
+    return res.status(200).json(solicitud);
+  } catch (error) {
+    console.error('Error al cambiar el estado de la solicitud:', error.message);
+    return res.status(500).json({
+      error: 'No pudimos cambiar el estado. Intenta de nuevo.',
     });
   }
 });
