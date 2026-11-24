@@ -142,6 +142,30 @@ async function asignarResponsable(codigo, responsable) {
   return convertirSolicitud(resultado.rows[0]);
 }
 
+// ---------- SOP-15: cambiar estado ----------
+
+// Cambia el estado de una solicitud y actualiza actualizado_en.
+// El código debe llegar ya normalizado. Devuelve la solicitud actualizada,
+// o null si no existe.
+async function cambiarEstado(codigo, estado) {
+  if (!db.pool) {
+    throw new Error('La base de datos no está configurada');
+  }
+
+  const resultado = await db.pool.query(
+    `UPDATE solicitudes
+     SET estado = $1, actualizado_en = NOW()
+     WHERE codigo = $2
+     RETURNING *`,
+    [estado, codigo],
+  );
+
+  if (resultado.rows.length === 0) {
+    return null;
+  }
+  return convertirSolicitud(resultado.rows[0]);
+}
+
 module.exports = {
   crearSolicitud,
   convertirSolicitud,
@@ -149,4 +173,5 @@ module.exports = {
   listarSolicitudes,
   contarAbiertas,
   asignarResponsable,
+  cambiarEstado,
 };
