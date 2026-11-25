@@ -17,6 +17,8 @@ const { normalizarCodigo, esCodigoValido } = require('../services/codigo');
 const router = express.Router();
 
 const NO_ENCONTRADA = 'No encontramos una solicitud con ese código. Revisa que esté bien escrito.';
+const ESTADO_ESPERANDO_RESPUESTA = ESTADOS[2];
+const MAX_NOTA_TECNICO = 300;
 
 // Primero la clave: si no es correcta, ninguna ruta de abajo se ejecuta (401).
 router.use('/api/tecnico', tecnicoAuth);
@@ -117,12 +119,13 @@ router.patch('/api/tecnico/solicitudes/:codigo/responsable', async (req, res) =>
 
 // ---------- SOP-15: cambiar estado ----------
 
-// PATCH /api/tecnico/solicitudes/:codigo/estado con cuerpo { estado }
-// Cambia el estado y actualiza actualizado_en. SOP-16 implementará la nota.
+// PATCH /api/tecnico/solicitudes/:codigo/estado con cuerpo { estado, nota? }
 router.patch('/api/tecnico/solicitudes/:codigo/estado', async (req, res) => {
   const codigo = normalizarCodigo(req.params.codigo);
   const cuerpo = req.body && typeof req.body === 'object' ? req.body : {};
   const estado = typeof cuerpo.estado === 'string' ? cuerpo.estado.trim() : '';
+  const nota = typeof cuerpo.nota === 'string' ? cuerpo.nota.trim() : '';
+  const esperaRespuesta = estado === ESTADO_ESPERANDO_RESPUESTA;
 
   if (!ESTADOS.includes(estado)) {
     return res.status(400).json({
@@ -131,12 +134,25 @@ router.patch('/api/tecnico/solicitudes/:codigo/estado', async (req, res) => {
     });
   }
 
+  if (esperaRespuesta && !nota) {
+    return res.status(400).json({
+      error: 'Revisa los campos marcados.',
+      campos: { nota: 'Escribe la nota que necesita el solicitante.' },
+    });
+  }
+  if (esperaRespuesta && nota.length > MAX_NOTA_TECNICO) {
+    return res.status(400).json({
+      error: 'Revisa los campos marcados.',
+      campos: { nota: `La nota no puede superar ${MAX_NOTA_TECNICO} caracteres.` },
+    });
+  }
+
   if (!esCodigoValido(codigo)) {
     return res.status(404).json({ error: NO_ENCONTRADA });
   }
 
   try {
-    const solicitud = await cambiarEstado(codigo, estado);
+    const solicitud = await cambiarEstado(codigo, estado, esperaRespuesta ? nota : null);
 
     if (!solicitud) {
       return res.status(404).json({ error: NO_ENCONTRADA });
