@@ -20,7 +20,8 @@
       <button type="submit">Entrar</button>
     </form>
 
-    <!-- Paso 2: la lista de solicitudes (SOP-14) con la asignación de responsable (SOP-17) -->
+    <!-- Paso 2: la lista de solicitudes (SOP-14) con la asignación de responsable (SOP-17)
+         y el cambio de estado con nota (SOP-15, SOP-16) -->
     <section id="panel" hidden>
       <div class="panel-barra">
         <p class="abiertas"><strong id="total-abiertas">0</strong> <span id="texto-abiertas">abiertas</span></p>
@@ -70,6 +71,22 @@
         <button type="submit">Asignar</button>
         <p class="mensaje-error s-error" role="alert"></p>
         <p class="mensaje-ok s-ok" role="status"></p>
+      </form>
+
+      <!-- SOP-15 y SOP-16: cambiar el estado; la nota es obligatoria en "Esperando tu respuesta" -->
+      <form class="form-estado" novalidate>
+        <label>Estado
+          <select class="s-nuevo-estado" name="estado">
+            <!-- Los estados se llenan desde js/tecnico.js -->
+          </select>
+        </label>
+        <label class="s-campo-nota" hidden>Nota para el solicitante
+          <textarea class="s-nota" name="nota" rows="2" maxlength="300"
+                    placeholder="Ejemplo: envíanos una captura del error que te aparece."></textarea>
+        </label>
+        <button type="submit">Guardar estado</button>
+        <p class="mensaje-error s-error-estado" role="alert"></p>
+        <p class="mensaje-ok s-ok-estado" role="status"></p>
       </form>
     </li>
   </template>
