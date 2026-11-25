@@ -1,12 +1,16 @@
 // Lógica del panel del técnico (tecnico.html).
 // SOP-14: lista de todas las solicitudes con filtro por estado y contador de abiertas.
 // SOP-17: asignar o cambiar el responsable de cada solicitud.
+// SOP-15 y SOP-16: cambiar el estado; en "Esperando tu respuesta" se exige una nota.
 // La clave se guarda en sessionStorage y se envía en el encabezado X-Tecnico-Clave (AGENTS.md 7.7).
 
 // Mismos textos y mismo orden que ESTADOS en src/constantes.js.
 const ESTADOS = ['Recibida', 'En revisión', 'Esperando tu respuesta', 'Resuelta'];
+const ESPERANDO_RESPUESTA = ESTADOS[2];
+const RESUELTA = ESTADOS[3];
 
 const MAX_RESPONSABLE = 100;
+const MAX_NOTA = 300; // igual que en la API (contrato 7.4)
 const LLAVE_CLAVE = 'tecnicoClave';
 
 // Texto del contador: "1 abierta" o "3 abiertas".
@@ -22,6 +26,34 @@ function validarResponsable(texto) {
     return `El nombre puede tener máximo ${MAX_RESPONSABLE} caracteres.`;
   }
   return '';
+}
+
+// Revisa el cambio de estado antes de enviarlo (las mismas reglas de la API).
+// Devuelve { campo: mensaje } solo con lo que está mal; vacío si todo está bien.
+function validarCambioEstado(estado, nota) {
+  const errores = {};
+  const notaLimpia = String(nota || '').trim();
+
+  if (!ESTADOS.includes(estado)) {
+    errores.estado = 'Elige un estado de la lista.';
+  } else if (estado === ESPERANDO_RESPUESTA) {
+    if (!notaLimpia) {
+      errores.nota = 'Escribe qué necesitas que te envíe el solicitante.';
+    } else if (notaLimpia.length > MAX_NOTA) {
+      errores.nota = `La nota puede tener máximo ${MAX_NOTA} caracteres.`;
+    }
+  }
+  return errores;
+}
+
+// Ajusta el contador de abiertas después de un cambio de estado.
+// "Abierta" = cualquier estado distinto de "Resuelta".
+function nuevoTotalAbiertas(total, estadoAntes, estadoDespues) {
+  const estabaAbierta = estadoAntes !== RESUELTA;
+  const quedaAbierta = estadoDespues !== RESUELTA;
+  if (estabaAbierta && !quedaAbierta) return total - 1;
+  if (!estabaAbierta && quedaAbierta) return total + 1;
+  return total;
 }
 
 // Convierte el estado en una clase CSS: "Esperando tu respuesta" → "estado-esperando-tu-respuesta".
@@ -108,8 +140,12 @@ if (typeof document !== 'undefined') {
     poner('.s-actualizado', formatearFecha(solicitud.actualizadoEn));
 
     const etiqueta = item.querySelector('.s-estado');
-    etiqueta.textContent = solicitud.estado;
-    etiqueta.classList.add(claseDeEstado(solicitud.estado));
+    // Pinta la etiqueta del estado (se reutiliza cuando el técnico lo cambia).
+    function pintarEstado(estado) {
+      etiqueta.textContent = estado;
+      etiqueta.className = 'etiqueta-estado s-estado ' + claseDeEstado(estado);
+    }
+    pintarEstado(solicitud.estado);
 
     // SOP-17: formulario del responsable
     const form = item.querySelector('.form-responsable');
@@ -153,6 +189,85 @@ if (typeof document !== 'undefined') {
         }
       } finally {
         boton.disabled = false;
+      }
+    });
+
+    // SOP-15 y SOP-16: formulario del estado (con nota en "Esperando tu respuesta")
+    const formEstado = item.querySelector('.form-estado');
+    const selectEstado = item.querySelector('.s-nuevo-estado');
+    const campoNota = item.querySelector('.s-campo-nota');
+    const nota = item.querySelector('.s-nota');
+    const errorEstado = item.querySelector('.s-error-estado');
+    const okEstado = item.querySelector('.s-ok-estado');
+    const botonEstado = formEstado.querySelector('button');
+    let estadoActual = solicitud.estado;
+
+    ESTADOS.forEach((estado) => {
+      const opcion = document.createElement('option');
+      opcion.value = estado;
+      opcion.textContent = estado;
+      selectEstado.appendChild(opcion);
+    });
+    selectEstado.value = estadoActual;
+    // Si ya está esperando respuesta, se muestra la nota que se le pidió al solicitante.
+    nota.value = estadoActual === ESPERANDO_RESPUESTA ? solicitud.notaTecnico || '' : '';
+
+    // La nota solo aparece cuando el estado elegido es "Esperando tu respuesta".
+    function mostrarNotaSiHaceFalta() {
+      campoNota.hidden = selectEstado.value !== ESPERANDO_RESPUESTA;
+    }
+    mostrarNotaSiHaceFalta();
+    selectEstado.addEventListener('change', () => {
+      okEstado.textContent = '';
+      errorEstado.textContent = '';
+      mostrarNotaSiHaceFalta();
+    });
+
+    formEstado.addEventListener('submit', async (evento) => {
+      evento.preventDefault();
+      okEstado.textContent = '';
+      const nuevoEstado = selectEstado.value;
+      const errores = validarCambioEstado(nuevoEstado, nota.value);
+      errorEstado.textContent = errores.estado || errores.nota || '';
+      nota.classList.toggle('campo-invalido', Boolean(errores.nota));
+      if (errores.nota) {
+        nota.focus();
+        return;
+      }
+      if (errores.estado) return;
+
+      const cuerpo = { estado: nuevoEstado };
+      if (nuevoEstado === ESPERANDO_RESPUESTA) cuerpo.nota = nota.value.trim();
+
+      botonEstado.disabled = true;
+      try {
+        const ruta = '/api/tecnico/solicitudes/' + encodeURIComponent(solicitud.codigo) + '/estado';
+        const { res, datos } = await llamarApi(ruta, {
+          method: 'PATCH',
+          body: JSON.stringify(cuerpo),
+        });
+        if (res.ok) {
+          // Actualiza el contador de abiertas, la etiqueta y la fecha sin recargar la lista.
+          const total = Number(document.getElementById('total-abiertas').textContent) || 0;
+          const nuevoTotal = nuevoTotalAbiertas(total, estadoActual, datos.estado);
+          document.getElementById('total-abiertas').textContent = nuevoTotal;
+          document.getElementById('texto-abiertas').textContent = textoAbiertas(nuevoTotal);
+          estadoActual = datos.estado;
+          pintarEstado(datos.estado);
+          item.querySelector('.s-actualizado').textContent = formatearFecha(datos.actualizadoEn);
+          okEstado.textContent = datos.estado === ESPERANDO_RESPUESTA
+            ? 'Listo: el solicitante ya ve tu nota.'
+            : 'Listo: el solicitante ya ve el nuevo estado.';
+        } else {
+          errorEstado.textContent = (datos.campos && (datos.campos.nota || datos.campos.estado)) ||
+            datos.error || 'No pudimos cambiar el estado. Intenta de nuevo.';
+        }
+      } catch (e) {
+        if (e.message !== 'Clave incorrecta') {
+          errorEstado.textContent = 'No hay conexión con el servidor. Intenta de nuevo.';
+        }
+      } finally {
+        botonEstado.disabled = false;
       }
     });
 
@@ -221,5 +336,14 @@ if (typeof document !== 'undefined') {
 
 // Permite usar estas funciones en las pruebas con Jest (en el navegador no existe "module").
 if (typeof module !== 'undefined') {
-  module.exports = { ESTADOS, textoAbiertas, validarResponsable, claseDeEstado, formatearFecha };
+  module.exports = {
+    ESTADOS,
+    MAX_NOTA,
+    textoAbiertas,
+    validarResponsable,
+    validarCambioEstado,
+    nuevoTotalAbiertas,
+    claseDeEstado,
+    formatearFecha,
+  };
 }
