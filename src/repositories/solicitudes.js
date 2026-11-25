@@ -144,20 +144,20 @@ async function asignarResponsable(codigo, responsable) {
 
 // ---------- SOP-15: cambiar estado ----------
 
-// Cambia el estado de una solicitud y actualiza actualizado_en.
+// Cambia el estado, guarda la nota si se entrega y actualiza actualizado_en.
 // El código debe llegar ya normalizado. Devuelve la solicitud actualizada,
 // o null si no existe.
-async function cambiarEstado(codigo, estado) {
+async function cambiarEstado(codigo, estado, notaTecnico = null) {
   if (!db.pool) {
     throw new Error('La base de datos no está configurada');
   }
 
   const resultado = await db.pool.query(
     `UPDATE solicitudes
-     SET estado = $1, actualizado_en = NOW()
-     WHERE codigo = $2
+     SET estado = $1, nota_tecnico = COALESCE($2, nota_tecnico), actualizado_en = NOW()
+     WHERE codigo = $3
      RETURNING *`,
-    [estado, codigo],
+    [estado, notaTecnico, codigo],
   );
 
   if (resultado.rows.length === 0) {

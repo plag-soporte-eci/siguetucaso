@@ -1,9 +1,10 @@
 const express = require('express');
-const { SERVICIOS } = require('../constantes');
+const { ESTADOS, SERVICIOS } = require('../constantes');
 const { crearSolicitud, buscarPorCodigo } = require('../repositories/solicitudes');
 const { normalizarCodigo, esCodigoValido } = require('../services/codigo');
 
 const router = express.Router();
+const ESTADO_ESPERANDO_RESPUESTA = ESTADOS[2];
 
 function validarSolicitud(datos) {
   const campos = {};
@@ -79,16 +80,19 @@ const NO_ENCONTRADA = 'No encontramos una solicitud con ese código. Revisa que 
 // Arma la respuesta pública: NUNCA incluye nombre ni correo (AGENTS.md, sección 7.4).
 // La nota del técnico solo se muestra cuando el estado es "Esperando tu respuesta".
 function vistaPublica(solicitud) {
-  return {
+  const vista = {
     codigo: solicitud.codigo,
     servicio: solicitud.servicio,
     estado: solicitud.estado,
     creadoEn: solicitud.creadoEn,
     actualizadoEn: solicitud.actualizadoEn,
     responsable: solicitud.responsable || null,
-    notaTecnico:
-      solicitud.estado === 'Esperando tu respuesta' ? solicitud.notaTecnico || null : null,
   };
+
+  if (solicitud.estado === ESTADO_ESPERANDO_RESPUESTA) {
+    vista.notaTecnico = solicitud.notaTecnico || null;
+  }
+  return vista;
 }
 
 router.get('/api/solicitudes/:codigo', async (req, res) => {

@@ -22,7 +22,7 @@ function cambiarEstado(codigo, cuerpo) {
     .send(cuerpo);
 }
 
-describe('PATCH /api/tecnico/solicitudes/:codigo/estado (SOP-15)', () => {
+describe('PATCH /api/tecnico/solicitudes/:codigo/estado (SOP-15 y SOP-16)', () => {
   const claveOriginal = process.env.TECNICO_PASSWORD;
   let codigo;
 
@@ -87,10 +87,65 @@ describe('PATCH /api/tecnico/solicitudes/:codigo/estado (SOP-15)', () => {
     const estados = ['Recibida', 'En revisión', 'Esperando tu respuesta', 'Resuelta'];
 
     for (const estado of estados) {
-      const res = await cambiarEstado(codigo, { estado });
+      const cuerpo =
+        estado === 'Esperando tu respuesta'
+          ? { estado, nota: 'Necesitamos una captura del error.' }
+          : { estado };
+      const res = await cambiarEstado(codigo, cuerpo);
       expect(res.status).toBe(200);
       expect(res.body.estado).toBe(estado);
     }
+  });
+
+  test('guarda una nota válida y el solicitante puede consultarla', async () => {
+    const res = await cambiarEstado(codigo, {
+      estado: 'Esperando tu respuesta',
+      nota: '  Envía una captura del error.  ',
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.body.notaTecnico).toBe('Envía una captura del error.');
+
+    const publica = await request(app).get(`/api/solicitudes/${codigo}`);
+    expect(publica.status).toBe(200);
+    expect(publica.body.notaTecnico).toBe('Envía una captura del error.');
+  });
+
+  test('acepta una nota de exactamente 300 caracteres', async () => {
+    const nota = 'a'.repeat(300);
+    const res = await cambiarEstado(codigo, {
+      estado: 'Esperando tu respuesta',
+      nota,
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.body.notaTecnico).toBe(nota);
+  });
+
+  test('responde 400 si falta la nota para esperar una respuesta', async () => {
+    const res = await cambiarEstado(codigo, { estado: 'Esperando tu respuesta' });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({
+      error: 'Revisa los campos marcados.',
+      campos: { nota: expect.any(String) },
+    });
+
+    const publica = await request(app).get(`/api/solicitudes/${codigo}`);
+    expect(publica.body.estado).toBe('Recibida');
+  });
+
+  test('responde 400 si la nota supera 300 caracteres', async () => {
+    const res = await cambiarEstado(codigo, {
+      estado: 'Esperando tu respuesta',
+      nota: 'a'.repeat(301),
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({
+      error: 'Revisa los campos marcados.',
+      campos: { nota: expect.any(String) },
+    });
   });
 
   test('responde 400 si el estado está vacío o no existe', async () => {

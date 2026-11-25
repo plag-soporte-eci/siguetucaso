@@ -42,7 +42,6 @@ describe('GET /api/solicitudes/:codigo', () => {
       creadoEn: expect.any(String),
       actualizadoEn: expect.any(String),
       responsable: null,
-      notaTecnico: null,
     });
   });
 
@@ -89,7 +88,7 @@ describe('GET /api/solicitudes/:codigo', () => {
       [codigo]
     );
     const enRevision = await request(app).get(`/api/solicitudes/${codigo}`);
-    expect(enRevision.body.notaTecnico).toBeNull();
+    expect(enRevision.body).not.toHaveProperty('notaTecnico');
 
     await db.pool.query(
       "UPDATE solicitudes SET estado = 'Esperando tu respuesta' WHERE codigo = $1",
