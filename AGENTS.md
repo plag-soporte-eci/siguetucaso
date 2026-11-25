@@ -141,13 +141,13 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 | 1 | **SOP-11 · H1 parte frontend:** `public/index.html` con el formulario guiado y validaciones en el navegador. **Empieza ya contra el contrato de la sección 7.4** (no esperes la API) ✅ | 1 | — | SOP-12 parte 2 |
 | 2 | **SOP-13 · H3 parte frontend:** `public/consultar.html` con el campo del código y la línea de pasos del estado ✅ | 1 | Contrato 7.4 (probar con la API de la tarea 7 cuando esté) | Review 1 |
 | 3 | Revisar que todo funcione en celular | 1 | — | Review 1 |
-| 4 | Pantallas del técnico `public/tecnico.html` para **SOP-14, SOP-15, SOP-16, SOP-17** (con cada dueño) | 2 | API de cada historia | SOP-35 |
+| 4 | Pantallas del técnico `public/tecnico.html` para **SOP-14, SOP-15, SOP-16, SOP-17** (con cada dueño) ✅ | 2 | API de cada historia | SOP-35 |
 | 5 | Organizar la **daily** de las 8 p. m. y guardar evidencia (captura o nota corta de cada una) | 1–2 | — | — |
 | 6 | Vigilar el tablero: WIP ≤ 2, bloqueos con *flag*, PR sin revisar > 24 h | 1–2 | — | — |
 | 7 | **SOP-13 · H3 parte backend:** `GET /api/solicitudes/:codigo` + prueba ✅ | 1 | SOP-11 parte backend | SOP-13 pantalla |
 | 8 | Registrar las **métricas Lean** al final de cada sprint: tiempo de ciclo por historia (reporte *Cycle time* de Jira) e historias terminadas | 1–2 | — | Retro |
 | 9 | Facilitar la **retrospectiva**: identificar 2 desperdicios reales, elegir 1 mejora, responsable y cómo medirla | 1–2 | Review | — |
-| 10 | **SOP-17 · H7** Asignar responsable (API + prueba; pantalla con Sebastián A.) | 2 | SOP-14 | SOP-35 |
+| 10 | **SOP-17 · H7** Asignar responsable (API + prueba; pantalla con Sebastián A.) ✅ | 2 | SOP-14 | SOP-35 |
 
 #### Nicolas Toro — Developer Backend y calidad
 
@@ -155,8 +155,8 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 |---|---|---|---|---|
 | 1 | **SOP-11 · H1 parte backend:** `src/constantes.js`, `src/schema.sql`, `src/initDb.js`, `src/repositories/solicitudes.js`, `POST /api/solicitudes` + pruebas. **Es la tarea más urgente del sprint** ✅ | 1 | SOP-12 parte 1 (si aún no está, usar un código temporal y reemplazarlo) | Sebastián A. (SOP-13), Juan Sebastián (SOP-12 parte 2), Sebastián A. (integración) |
 | 2 | Ayudar a que las pruebas de los demás usen pg-mem bien (sección 7.6) | 1–2 | — | — |
-| 3 | **SOP-15 · H5** Cambiar estado (API + prueba) | 2 | SOP-14 | SOP-16 |
-| 4 | **SOP-16 · H6** "Esperando tu respuesta" con nota (API + prueba) | 2 | SOP-15 | SOP-35 |
+| 3 | **SOP-15 · H5** Cambiar estado (API + prueba) ✅ | 2 | SOP-14 | SOP-16 |
+| 4 | **SOP-16 · H6** "Esperando tu respuesta" con nota (API + prueba) ✅ | 2 | SOP-15 | SOP-35 |
 
 #### David Salomón Baena Rubio — Developer DevOps
 
@@ -165,9 +165,9 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 | 1 | **SOP-31** CI con GitHub Actions + exigir el check en la protección de `main` — **hoy** ✅ | 1 | — (SOP-30 ya está) | Todos los PR siguientes |
 | 2 | **SOP-32** Despliegue en Render + Neon (auto-deploy desde `main`, health check en `/health`) — **a más tardar mié 11 en la mañana** ✅ | 1 | — | Review 1, SOP-33 |
 | 3 | **SOP-33** Release v1.0 (versión `1.0.0`, tag, notas) ✅ | 1 | SOP-11, 12, 13 y 32 | Review 1 |
-| 4 | **SOP-14 · H4** Lista centralizada del técnico + middleware de clave (API + prueba) | 2 | SOP-33 | SOP-15, SOP-17 |
-| 5 | **SOP-34** Logs, salud y rollback (con simulacro y capturas) | 2 | SOP-32 | — |
-| 6 | **SOP-35** Release v2.0 | 2 | SOP-14 a 17 | Review 2 |
+| 4 | **SOP-14 · H4** Lista centralizada del técnico + middleware de clave (API + prueba) ✅ | 2 | SOP-33 | SOP-15, SOP-17 |
+| 5 | **SOP-34** Logs, salud y rollback (con simulacro y capturas) ✅ | 2 | SOP-32 | — |
+| 6 | **SOP-35** Release v2.0 ✅ | 2 | SOP-14 a 17 | Review 2 |
 
 ### 4.4 Quién revisa a quién (para no esperar)
 
@@ -192,13 +192,13 @@ flowchart LR
   S13b --> S13f
   S13f --> S33[SOP-33 Release v1.0 ✅]
   S32 --> S33
-  S33 --> S14[SOP-14 Lista técnico]
-  S14 --> S15[SOP-15 Cambiar estado]
-  S15 --> S16[SOP-16 Esperando tu respuesta]
-  S14 --> S17[SOP-17 Responsable]
-  S16 --> S35[SOP-35 Release v2.0]
+  S33 --> S14[SOP-14 Lista técnico ✅]
+  S14 --> S15[SOP-15 Cambiar estado ✅]
+  S15 --> S16[SOP-16 Esperando tu respuesta ✅]
+  S14 --> S17[SOP-17 Responsable ✅]
+  S16 --> S35[SOP-35 Release v2.0 ✅]
   S17 --> S35
-  S32 --> S34[SOP-34 Logs y rollback]
+  S32 --> S34[SOP-34 Logs y rollback ✅]
 ```
 
 **Camino crítico del Sprint 1** (si uno se atrasa, se atrasa la demo):
