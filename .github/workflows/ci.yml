@@ -10,6 +10,11 @@ on:
   pull_request:
     branches: [main]
 
+# Menor privilegio (SOP-48): el token de GitHub de este workflow solo puede
+# leer el código. Si un paso quedara comprometido, no podría escribir en el repo.
+permissions:
+  contents: read
+
 # Si se suben commits nuevos al mismo PR, se cancela la ejecución anterior
 # para no gastar tiempo en una versión que ya no importa.
 concurrency:
@@ -43,3 +48,43 @@ jobs:
         run: npm test
         env:
           NODE_ENV: test
+
+  # DevSecOps básico (SOP-48): corre en paralelo con las pruebas.
+  seguridad:
+    name: Seguridad (dependencias y secretos)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # 1. Descarga TODO el historial (no solo el último commit) para revisar
+      #    también los commits viejos en busca de claves filtradas.
+      - name: Checkout con todo el historial
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Instalar Node 20
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+
+      # 2. Revisa las dependencias que llegan a producción (no las de pruebas)
+      #    contra la base de vulnerabilidades de npm. Falla con "high" o "critical".
+      - name: Auditar dependencias de producción (npm audit)
+        run: npm audit --omit=dev --audit-level=high
+
+      # 3. Busca contraseñas, tokens y cadenas de conexión en todo el historial.
+      #    Se descarga el binario oficial de gitleaks y se comprueba su huella
+      #    SHA-256 antes de usarlo (si alguien lo cambiara, el paso falla).
+      - name: Buscar secretos filtrados (gitleaks)
+        env:
+          GITLEAKS_VERSION: 8.30.1
+          GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+        run: |
+          cd "$RUNNER_TEMP"
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+          cd "$GITHUB_WORKSPACE"
+          "$RUNNER_TEMP/gitleaks" git . --config .gitleaks.toml --redact --no-banner
