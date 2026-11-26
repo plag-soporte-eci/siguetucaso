@@ -119,7 +119,7 @@ Usan Jest, Supertest y una base PostgreSQL en memoria (pg-mem), así que no nece
 curl http://localhost:3000/health
 ```
 ```json
-{ "status": "ok", "version": "2.0.0", "db": "ok", "time": "2026-11-26T15:00:00.000Z" }
+{ "status": "ok", "version": "2.1.0", "db": "ok", "time": "2026-11-26T15:00:00.000Z" }
 ```
 `db` puede ser `ok` (la base responde), `sin configurar` (no hay `DATABASE_URL`) o `error` (la base no responde). `version` sale de `package.json` y confirma qué versión está desplegada.
 
@@ -288,7 +288,7 @@ Se volvió de la v1.0.0 al deploy anterior (`7f459c6`, versión `0.1.0`) y luego
 |---|---|---|
 | [v1.0.0](https://github.com/plag-soporte-eci/siguetucaso/releases/tag/v1.0.0) | 1 · Registro y consulta | Formulario guiado, código de seguimiento con botón Copiar y consulta pública del estado |
 | [v2.0.0](https://github.com/plag-soporte-eci/siguetucaso/releases/tag/v2.0.0) | 2 · Gestión del técnico | Panel del técnico: lista centralizada, cambio de estado, nota "Esperando tu respuesta" y responsable |
-| Siguiente | Cierre | Respuesta del solicitante con archivo, rediseño con la identidad de DiNNo y documentación final |
+| [v2.1.0](https://github.com/plag-soporte-eci/siguetucaso/releases/tag/v2.1.0) | Cierre | Respuesta del solicitante con archivo, rediseño con la identidad de DiNNo y documentación final |
 
 ## Equipo y forma de trabajo
 | Integrante | Rol |
