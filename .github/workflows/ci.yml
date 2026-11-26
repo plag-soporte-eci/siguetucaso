@@ -30,7 +30,7 @@ jobs:
     steps:
       # 1. Descarga el código del repositorio
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       # 2. Instala Node 20 (la versión del proyecto) y guarda en caché las dependencias
       - name: Instalar Node 20
@@ -59,7 +59,7 @@ jobs:
       # 1. Descarga TODO el historial (no solo el último commit) para revisar
       #    también los commits viejos en busca de claves filtradas.
       - name: Checkout con todo el historial
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
