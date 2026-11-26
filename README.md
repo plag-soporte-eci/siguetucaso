@@ -27,6 +27,7 @@ Proyecto final de **Pensamiento Lean y Agile** · Escuela Colombiana de Ingenier
 - [Stack y estructura](#stack-y-estructura)
 - [Despliegue (Render + Neon)](#despliegue-render--neon)
 - [Operación: logs, salud y rollback](#operación-logs-salud-y-rollback)
+- [Seguridad (DevSecOps)](#seguridad-devsecops)
 - [Versiones](#versiones)
 - [Equipo y forma de trabajo](#equipo-y-forma-de-trabajo)
 - [Componentes reutilizados y uso de IA](#componentes-reutilizados-y-uso-de-ia)
@@ -283,6 +284,21 @@ Se volvió de la v1.0.0 al deploy anterior (`7f459c6`, versión `0.1.0`) y luego
 
 </details>
 
+## Seguridad (DevSecOps)
+La seguridad se revisa en cada Pull Request, igual que las pruebas:
+
+| Control | Dónde | Qué hace |
+|---|---|---|
+| Permisos mínimos | `ci.yml` | El token del CI solo puede leer el código |
+| `npm audit` | CI, job **Seguridad** | Falla si una dependencia de producción tiene una vulnerabilidad alta o crítica |
+| gitleaks | CI, job **Seguridad** + `.gitleaks.toml` | Busca contraseñas, tokens y cadenas de conexión en todo el historial, incluida la `DATABASE_URL` de Neon |
+| Dependabot | `.github/dependabot.yml` | Cada lunes abre PRs para actualizar npm y GitHub Actions |
+| Cabeceras de seguridad | `src/app.js` | Sin `X-Powered-By`; con `nosniff`, `X-Frame-Options: DENY` y `Referrer-Policy: no-referrer` |
+
+Para revisar lo mismo en tu computador antes de abrir el PR: `npm audit --omit=dev` y, si tienes [gitleaks](https://github.com/gitleaks/gitleaks) instalado, `gitleaks git . --config .gitleaks.toml`.
+
+Cómo reportar una vulnerabilidad y la lista completa de controles: [SECURITY.md](SECURITY.md).
+
 ## Versiones
 | Versión | Sprint | Contenido |
 |---|---|---|
@@ -314,6 +330,8 @@ Trabajamos con Scrum y Kanban en [Jira](https://plag-soporte-eci.atlassian.net/j
 | [jest](https://jestjs.io/) | Pruebas automatizadas (desarrollo) | MIT |
 | [supertest](https://github.com/ladjs/supertest) | Pruebas de endpoints HTTP (desarrollo) | MIT |
 | [pg-mem](https://github.com/oguimbal/pg-mem) | PostgreSQL en memoria para pruebas (desarrollo) | MIT |
+| [gitleaks](https://github.com/gitleaks/gitleaks) | Búsqueda de secretos en el CI (binario oficial, sin licencia de pago) | MIT |
+| Dependabot (GitHub) | Actualización automática de dependencias | – |
 | [Plus Jakarta Sans](https://github.com/tokotype/PlusJakartaSans) | Fuente de la interfaz, guardada en `public/fonts/` | SIL OFL 1.1 |
 | Claude (IA) | Apoyo en documentación, plantillas y esqueleto inicial de la app | – |
 

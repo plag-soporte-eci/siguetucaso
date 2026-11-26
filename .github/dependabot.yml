@@ -1,0 +1,35 @@
+# Dependabot (SOP-48): revisa cada semana si hay versiones nuevas de las
+# dependencias y abre un Pull Request para actualizarlas. Cada PR pasa por el
+# CI (pruebas + seguridad) y por la revisión de otro integrante, como todo.
+version: 2
+
+updates:
+  # Paquetes de npm (package.json / package-lock.json)
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: America/Bogota
+    open-pull-requests-limit: 5
+    # La clave de Jira va en el título del PR y del commit (regla de AGENTS.md).
+    commit-message:
+      prefix: "SOP-48"
+    # Las actualizaciones menores y de parche llegan juntas en un solo PR.
+    groups:
+      npm-menores:
+        update-types:
+          - minor
+          - patch
+
+  # Acciones de GitHub usadas en .github/workflows (checkout, setup-node...)
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: America/Bogota
+    commit-message:
+      prefix: "SOP-48"
