@@ -136,9 +136,9 @@ El calendario de abajo es el que se siguió en los Sprints 1 y 2; se deja como r
 | 3 | **SOP-12 · H2 parte 2:** pantalla de confirmación con el código y botón "Copiar" (coordinar con Sebastián A.) ✅ | 1 | SOP-11 (formulario y API) | SOP-13 |
 | 4 | Preparar y dirigir la **Sprint Review 1** con 2 usuarios; medir el indicador ✅ | 1 | SOP-33 (v1.0) | — |
 | 5 | Repriorizar el backlog con el feedback; aceptar o rechazar historias ✅ | 1–2 | — | Planning 2 |
-| 6 | **SOP-44** El solicitante responde lo que le pide el técnico (texto + 1 archivo; API, pantalla y prueba) | Cierre | SOP-16 | SOP-45 |
-| 7 | **SOP-45** Rediseño del front con la identidad visual de DiNNo y limpieza del código | Cierre | SOP-44 | — |
-| 8 | **SOP-46** README renovado y documentación actualizada | Cierre | — | — |
+| 6 | **SOP-44** El solicitante responde lo que le pide el técnico (texto + 1 archivo; API, pantalla y prueba) ✅ | Cierre | SOP-16 | SOP-45 |
+| 7 | **SOP-45** Rediseño del front con la identidad visual de DiNNo y limpieza del código ✅ | Cierre | SOP-44 | — |
+| 8 | **SOP-46** README renovado y documentación actualizada ✅ | Cierre | — | — |
 
 #### Sebastián Albarracín Silva — Scrum Master + Developer Frontend
 
@@ -205,9 +205,9 @@ flowchart LR
   S16 --> S35[SOP-35 Release v2.0 ✅]
   S17 --> S35
   S32 --> S34[SOP-34 Logs y rollback ✅]
-  S35 --> S44[SOP-44 Respuesta del solicitante]
-  S44 --> S45[SOP-45 Rediseño DiNNo]
-  S35 --> S46[SOP-46 Documentación final]
+  S35 --> S44[SOP-44 Respuesta del solicitante ✅]
+  S44 --> S45[SOP-45 Rediseño DiNNo ✅]
+  S35 --> S46[SOP-46 Documentación final ✅]
 ```
 
 **Camino crítico del Sprint 1** (si uno se atrasa, se atrasa la demo):
@@ -263,7 +263,9 @@ public/
   index.html                # formulario de reporte + confirmación  → Sebastián A. (SOP-11, SOP-12)
   consultar.html            # consulta por código                   → Sebastián A. (SOP-13)
   tecnico.html              # panel del técnico                     → Sprint 2
-  styles.css                # estilos compartidos
+  styles.css                # estilos compartidos (identidad visual de DiNNo)
+  fonts/                    # Plus Jakarta Sans (woff2) y su licencia OFL
+  favicon.svg               # ícono de la pestaña
   js/                       # un archivo JS por página (index.js, consultar.js, tecnico.js)
 tests/
   helpers/dbMemoria.js      # crea la base pg-mem para las pruebas  → Nicolas (SOP-11)
@@ -392,6 +394,7 @@ module.exports = { usarBaseEnMemoria };
 ### 7.7 Frontend
 
 - HTML, CSS y JavaScript **planos**. Sin frameworks, sin librerías externas, sin build.
+- Identidad visual de DiNNo: colores, radios y sombras salen de las variables de `:root` en `styles.css` (no se escriben colores sueltos). Naranja solo para la acción principal; cada estado se muestra con color + forma + palabra. La fuente Plus Jakarta Sans vive en `public/fonts/` (no se carga de internet).
 - Español, lenguaje sencillo, pensado para **celular primero**.
 - Las llamadas a la API con `fetch` a rutas relativas (`/api/...`), nunca a `localhost` fijo.
 - Mensajes de error claros y junto al campo que falla.

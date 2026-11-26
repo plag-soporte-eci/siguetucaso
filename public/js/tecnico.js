@@ -170,7 +170,7 @@ if (typeof document !== 'undefined') {
       if (respuesta.archivoNombre) {
         const boton = document.createElement('button');
         boton.type = 'button';
-        boton.className = 'boton-secundario boton-archivo';
+        boton.className = 'boton boton-borde boton-chico';
         boton.textContent = 'Descargar ' + respuesta.archivoNombre;
         boton.addEventListener('click', () => descargarArchivo(solicitud.codigo, respuesta, boton));
         fila.append(boton);

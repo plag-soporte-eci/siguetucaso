@@ -1,6 +1,5 @@
 // Pruebas del middleware de la clave del técnico (SOP-14).
-// Se monta el middleware en una app pequeña de prueba porque las rutas
-// del técnico (src/routes/tecnico.js) se agregan en la misma historia más adelante.
+// Se monta el middleware en una app pequeña para probarlo solo, sin las rutas del técnico.
 const express = require('express');
 const request = require('supertest');
 const tecnicoAuth = require('../src/middleware/tecnicoAuth');

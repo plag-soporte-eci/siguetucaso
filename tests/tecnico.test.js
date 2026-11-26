@@ -25,8 +25,7 @@ async function crear(nombre, servicio) {
   return res.body.codigo;
 }
 
-// Cambia la fecha o el estado directo en la base para preparar cada caso
-// (el cambio de estado por API llega con SOP-15).
+// Cambia la fecha o el estado directo en la base para preparar cada caso.
 async function actualizar(codigo, columna, valor) {
   await db.pool.query(`UPDATE solicitudes SET ${columna} = $1 WHERE codigo = $2`, [valor, codigo]);
 }
