@@ -13,3 +13,15 @@ CREATE TABLE IF NOT EXISTS solicitudes (
   creado_en       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   actualizado_en  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Respuestas del solicitante cuando el técnico le pide algo ("Esperando tu respuesta").
+-- El adjunto es opcional y se guarda en base64 (máx. 2 MB) para no depender de otro servicio.
+CREATE TABLE IF NOT EXISTS respuestas (
+  id              SERIAL PRIMARY KEY,
+  solicitud_id    INTEGER NOT NULL REFERENCES solicitudes(id),
+  texto           TEXT NOT NULL,
+  archivo_nombre  TEXT,
+  archivo_tipo    TEXT,
+  archivo_datos   TEXT,
+  creado_en       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

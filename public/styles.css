@@ -656,3 +656,92 @@ h1 {
   min-height: 0;
   margin: 0;
 }
+
+/* ---------- Respuesta del solicitante (SOP-44) ---------- */
+.form-respuesta {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #fcd34d;
+}
+
+.form-respuesta label {
+  display: block;
+  margin: 8px 0 4px;
+  font-weight: 600;
+}
+
+.form-respuesta textarea,
+.form-respuesta input[type="file"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font: inherit;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.form-respuesta textarea {
+  resize: vertical;
+}
+
+.form-respuesta .campo-invalido {
+  border-color: var(--error);
+}
+
+.form-respuesta button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 16px;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--primario);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.form-respuesta button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* Respuestas del solicitante en el panel del técnico (SOP-44) */
+.respuestas {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #eef2ff;
+}
+
+.respuestas-titulo {
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
+.s-respuestas {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.s-respuestas li + li {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #c7d2fe;
+}
+
+.s-respuestas p {
+  margin: 2px 0 0;
+  white-space: pre-wrap;
+}
+
+.respuesta-fecha {
+  font-size: 0.8rem;
+  color: var(--suave);
+}
+
+.boton-archivo {
+  margin-top: 6px;
+}

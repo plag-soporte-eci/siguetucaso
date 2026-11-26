@@ -11,6 +11,8 @@ const {
   buscarPorCodigo,
   asignarResponsable,
   cambiarEstado,
+  respuestasPorSolicitud,
+  buscarArchivo,
 } = require('../repositories/solicitudes');
 const { normalizarCodigo, esCodigoValido } = require('../services/codigo');
 
@@ -19,6 +21,12 @@ const router = express.Router();
 const NO_ENCONTRADA = 'No encontramos una solicitud con ese código. Revisa que esté bien escrito.';
 const ESTADO_ESPERANDO_RESPUESTA = ESTADOS[2];
 const MAX_NOTA_TECNICO = 300;
+
+// Agrega a cada solicitud la lista de respuestas del solicitante (SOP-44).
+async function conRespuestas(solicitudes) {
+  const respuestas = await respuestasPorSolicitud(solicitudes.map((s) => s.id));
+  return solicitudes.map((s) => ({ ...s, respuestas: respuestas[s.id] || [] }));
+}
 
 // Primero la clave: si no es correcta, ninguna ruta de abajo se ejecuta (401).
 router.use('/api/tecnico', tecnicoAuth);
@@ -35,7 +43,7 @@ router.get('/api/tecnico/solicitudes', async (req, res) => {
   }
 
   try {
-    const solicitudes = await listarSolicitudes(estado || null);
+    const solicitudes = await conRespuestas(await listarSolicitudes(estado || null));
     const abiertas = await contarAbiertas();
 
     return res.status(200).json({ abiertas, solicitudes });
@@ -64,7 +72,8 @@ router.get('/api/tecnico/solicitudes/:codigo', async (req, res) => {
     if (!solicitud) {
       return res.status(404).json({ error: NO_ENCONTRADA });
     }
-    return res.status(200).json(solicitud);
+    const [conDetalle] = await conRespuestas([solicitud]);
+    return res.status(200).json(conDetalle);
   } catch (error) {
     console.error('Error al consultar el detalle de la solicitud:', error.message);
     return res.status(500).json({
@@ -163,6 +172,33 @@ router.patch('/api/tecnico/solicitudes/:codigo/estado', async (req, res) => {
     return res.status(500).json({
       error: 'No pudimos cambiar el estado. Intenta de nuevo.',
     });
+  }
+});
+
+// ---------- SOP-44: descargar el archivo que adjuntó el solicitante ----------
+
+// GET /api/tecnico/solicitudes/:codigo/respuestas/:id/archivo
+router.get('/api/tecnico/solicitudes/:codigo/respuestas/:id/archivo', async (req, res) => {
+  const codigo = normalizarCodigo(req.params.codigo);
+  const id = Number(req.params.id);
+  const noHay = { error: 'No encontramos ese archivo.' };
+
+  if (!esCodigoValido(codigo) || !Number.isInteger(id) || id < 1) {
+    return res.status(404).json(noHay);
+  }
+
+  try {
+    const archivo = await buscarArchivo(codigo, id);
+
+    if (!archivo) {
+      return res.status(404).json(noHay);
+    }
+    res.set('Content-Type', archivo.tipo);
+    res.attachment(archivo.nombre);
+    return res.send(Buffer.from(archivo.datos, 'base64'));
+  } catch (error) {
+    console.error('Error al descargar el archivo:', error.message);
+    return res.status(500).json({ error: 'No pudimos descargar el archivo. Intenta de nuevo.' });
   }
 });
 

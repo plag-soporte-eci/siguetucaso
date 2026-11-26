@@ -8,6 +8,7 @@ const {
   validarCodigo,
   calcularPasos,
   formatearFecha,
+  validarRespuesta,
 } = require('../public/js/consultar');
 
 describe('consultar.html', () => {
@@ -81,5 +82,18 @@ describe('formatearFecha', () => {
 
   test('devuelve un texto legible para una fecha ISO', () => {
     expect(formatearFecha('2026-11-11T15:30:00.000Z')).toMatch(/2026/);
+  });
+});
+
+describe('validarRespuesta (SOP-44)', () => {
+  test('pide el texto y acepta la respuesta sin archivo', () => {
+    expect(validarRespuesta('  ', null).texto).not.toBe('');
+    expect(validarRespuesta('Listo, ya lo envié.', null)).toEqual({ texto: '', archivo: '' });
+  });
+
+  test('rechaza archivos de otro tipo o de más de 2 MB', () => {
+    expect(validarRespuesta('Hola', { type: 'text/plain', size: 10 }).archivo).toContain('PDF');
+    expect(validarRespuesta('Hola', { type: 'image/png', size: 3 * 1024 * 1024 }).archivo).toContain('2 MB');
+    expect(validarRespuesta('Hola', { type: 'application/pdf', size: 1000 }).archivo).toBe('');
   });
 });

@@ -1,7 +1,8 @@
 const express = require('express');
 const { ESTADOS, SERVICIOS } = require('../constantes');
-const { crearSolicitud, buscarPorCodigo } = require('../repositories/solicitudes');
+const { crearSolicitud, buscarPorCodigo, guardarRespuesta } = require('../repositories/solicitudes');
 const { normalizarCodigo, esCodigoValido } = require('../services/codigo');
+const { validarRespuesta } = require('../services/respuesta');
 
 const router = express.Router();
 const ESTADO_ESPERANDO_RESPUESTA = ESTADOS[2];
@@ -116,6 +117,42 @@ router.get('/api/solicitudes/:codigo', async (req, res) => {
     return res.status(500).json({
       error: 'No pudimos consultar tu solicitud. Intenta de nuevo.',
     });
+  }
+});
+
+// ---------- SOP-44: el solicitante responde lo que le pidió el técnico ----------
+
+// POST /api/solicitudes/:codigo/respuesta  con cuerpo { texto, archivo? }
+// Solo se puede responder en "Esperando tu respuesta"; al guardar vuelve a "En revisión".
+router.post('/api/solicitudes/:codigo/respuesta', async (req, res) => {
+  const codigo = normalizarCodigo(req.params.codigo);
+  const cuerpo = req.body && typeof req.body === 'object' ? req.body : {};
+  const validacion = validarRespuesta(cuerpo);
+
+  if (Object.keys(validacion.campos).length > 0) {
+    return res.status(400).json({ error: 'Revisa los campos marcados.', campos: validacion.campos });
+  }
+  if (!esCodigoValido(codigo)) {
+    return res.status(404).json({ error: NO_ENCONTRADA });
+  }
+
+  try {
+    const solicitud = await buscarPorCodigo(codigo);
+
+    if (!solicitud) {
+      return res.status(404).json({ error: NO_ENCONTRADA });
+    }
+    if (solicitud.estado !== ESTADO_ESPERANDO_RESPUESTA) {
+      return res.status(409).json({
+        error: 'Esta solicitud no está esperando una respuesta tuya. Consulta de nuevo su estado.',
+      });
+    }
+
+    const actualizada = await guardarRespuesta(solicitud, validacion.datos);
+    return res.status(201).json(vistaPublica(actualizada));
+  } catch (error) {
+    console.error('Error al guardar la respuesta:', error.message);
+    return res.status(500).json({ error: 'No pudimos enviar tu respuesta. Intenta de nuevo.' });
   }
 });
 
