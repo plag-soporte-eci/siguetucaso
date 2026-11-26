@@ -108,7 +108,7 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 | Sprint 0 · Arranque | 9 – 10 nov ✅ | Cliente, producto, repo, tablero y esqueleto |
 | Sprint 1 · Registro y consulta | 10 nov 12:00 → jue 12 nov 12:00 ✅ (release v1.0.0) | Un solicitante registra una solicitud y consulta su estado con un código, sin iniciar sesión |
 | Sprint 2 · Gestión del técnico | 12 nov 13:00 → 19 nov ✅ (release v2.0.0) | El técnico gestiona las solicitudes y el solicitante ve el avance, quién lo atiende y lo que le piden |
-| Cierre del proyecto | desde el 26 nov | Pulir el producto con lo aprendido en las Reviews: respuesta del solicitante, rediseño visual y documentación final |
+| Cierre del proyecto | 26 nov ✅ (release v2.1.0) | Pulir el producto con lo aprendido en las Reviews: respuesta del solicitante, rediseño visual y documentación final |
 
 **Estado actual:** los Sprints 1 y 2 están cerrados y sus historias en Jira están en Finalizado. Las tareas de cierre son SOP-44, SOP-45 y SOP-46 (sección 4.3).
 
@@ -139,6 +139,7 @@ El calendario de abajo es el que se siguió en los Sprints 1 y 2; se deja como r
 | 6 | **SOP-44** El solicitante responde lo que le pide el técnico (texto + 1 archivo; API, pantalla y prueba) ✅ | Cierre | SOP-16 | SOP-45 |
 | 7 | **SOP-45** Rediseño del front con la identidad visual de DiNNo y limpieza del código ✅ | Cierre | SOP-44 | — |
 | 8 | **SOP-46** README renovado y documentación actualizada ✅ | Cierre | — | — |
+| 9 | **SOP-47** Release v2.1.0 ✅ | Cierre | SOP-44, 45 y 46 | — |
 
 #### Sebastián Albarracín Silva — Scrum Master + Developer Frontend
 
