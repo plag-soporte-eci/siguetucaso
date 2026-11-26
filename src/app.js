@@ -21,7 +21,9 @@ app.use(healthRouter);
 app.use(solicitudesRouter);
 app.use(tecnicoRouter); // SOP-14: API del técnico (exige X-Tecnico-Clave)
 
-// Archivos del frontend (HTML, CSS y JS) en la carpeta public/
-app.use(express.static(path.join(__dirname, '..', 'public')));
+// Archivos del frontend (HTML, CSS y JS) en la carpeta public/.
+// extensions: ['html'] deja abrir las páginas sin escribir .html,
+// por ejemplo /tecnico (criterio 1 de SOP-14) o /consultar.
+app.use(express.static(path.join(__dirname, '..', 'public'), { extensions: ['html'] }));
 
 module.exports = app;
