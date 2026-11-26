@@ -244,6 +244,7 @@ src/
   schema.sql                # tabla solicitudes               → Nicolas (SOP-11)
   initDb.js                 # ejecuta schema.sql al arrancar  → Nicolas (SOP-11)
   services/codigo.js        # generarCodigo()                 → Juan Sebastián (SOP-12)
+  services/respuesta.js     # valida la respuesta del solicitante → Juan Sebastián (SOP-44)
   repositories/solicitudes.js  # todas las consultas SQL       → Nicolas (SOP-11) y se amplía en S2
   middleware/tecnicoAuth.js # valida la clave del técnico     → David (SOP-14)
   routes/health.js          # ya existe
@@ -301,6 +302,20 @@ CREATE TABLE IF NOT EXISTS solicitudes (
 );
 ```
 
+La respuesta del solicitante (SOP-44) va en una tabla aparte, que también se crea con `CREATE TABLE IF NOT EXISTS` (no hay que migrar `solicitudes`):
+
+```sql
+CREATE TABLE IF NOT EXISTS respuestas (
+  id              SERIAL PRIMARY KEY,
+  solicitud_id    INTEGER NOT NULL REFERENCES solicitudes(id),
+  texto           TEXT NOT NULL,
+  archivo_nombre  TEXT,
+  archivo_tipo    TEXT,
+  archivo_datos   TEXT,          -- adjunto en base64, máx. 2 MB
+  creado_en       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
 - La validación de `estado` y `servicio` se hace en el código con las constantes (pg-mem no soporta bien `CHECK`).
 - En la base las columnas van en `snake_case`; en el JSON de la API van en `camelCase` (el repositorio convierte).
 
@@ -314,7 +329,9 @@ Todas las respuestas son JSON. Errores: `{ "error": "mensaje para mostrar al usu
 |---|---|---|---|---|
 | `POST /api/solicitudes` | SOP-11 (+ SOP-12) | `{ nombre, correo, servicio, descripcion, desdeCuando?, queIntento? }` | **201** `{ codigo, estado, creadoEn }` | **400** con `campos` (obligatorio vacío, correo inválido, servicio no válido, descripción > 1000 caracteres) |
 | `GET /api/solicitudes/:codigo` | SOP-13 (+ S2) | `codigo` sin importar mayúsculas ni espacios | **200** `{ codigo, servicio, estado, creadoEn, actualizadoEn, responsable, notaTecnico }` | **404** `{ error: "No encontramos una solicitud con ese código. Revisa que esté bien escrito." }` |
+| `POST /api/solicitudes/:codigo/respuesta` | SOP-44 | `{ texto, archivo? }`; `archivo = { nombre, tipo, datos }` con `datos` en base64. Texto máx. 1000; archivo PNG, JPG o PDF de máx. 2 MB | **201** la vista pública, ya en "En revisión" | **400** con `campos` · **404** · **409** si el estado no es "Esperando tu respuesta" |
 
+- Al responder, la solicitud vuelve sola a "En revisión" para que el técnico la retome.
 - La consulta pública **nunca** devuelve `nombre` ni `correo`.
 - `responsable` y `notaTecnico` son `null` hasta el Sprint 2. `notaTecnico` solo se envía cuando el estado es "Esperando tu respuesta".
 
@@ -322,10 +339,13 @@ Todas las respuestas son JSON. Errores: `{ "error": "mensaje para mostrar al usu
 
 | Método y ruta | Historia | Cuerpo / parámetros | Respuesta OK |
 |---|---|---|---|
-| `GET /api/tecnico/solicitudes?estado=` | SOP-14 | `estado` opcional | **200** `{ abiertas, solicitudes: [ {…todos los campos} ] }`, más recientes primero |
+| `GET /api/tecnico/solicitudes?estado=` | SOP-14 | `estado` opcional | **200** `{ abiertas, solicitudes: [ {…todos los campos, respuestas} ] }`, más recientes primero |
 | `GET /api/tecnico/solicitudes/:codigo` | SOP-14 | — | **200** detalle completo |
 | `PATCH /api/tecnico/solicitudes/:codigo/estado` | SOP-15, SOP-16 | `{ estado, nota? }` (`nota` obligatoria si `estado` = "Esperando tu respuesta", máx. 300) | **200** solicitud actualizada · **400** estado inválido o falta la nota |
 | `PATCH /api/tecnico/solicitudes/:codigo/responsable` | SOP-17 | `{ responsable }` | **200** solicitud actualizada |
+| `GET /api/tecnico/solicitudes/:codigo/respuestas/:id/archivo` | SOP-44 | — | **200** el archivo adjunto (descarga) · **404** si no existe |
+
+`respuestas` es la lista `[ { id, texto, archivoNombre, archivoTipo, creadoEn } ]`, de la más antigua a la más reciente. No trae el contenido del archivo: se descarga aparte.
 
 Cada cambio del técnico actualiza `actualizado_en`.
 

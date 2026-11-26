@@ -49,6 +49,37 @@ function formatearFecha(iso) {
   return fecha.toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' });
 }
 
+// Límites de la respuesta del solicitante (iguales a los de la API, SOP-44).
+const MAX_RESPUESTA = 1000;
+const MAX_BYTES_ARCHIVO = 2 * 1024 * 1024;
+const TIPOS_ARCHIVO = ['image/png', 'image/jpeg', 'application/pdf'];
+
+// Revisa la respuesta antes de enviarla. archivo puede ser null o { type, size }.
+// Devuelve { texto, archivo } con los mensajes de error ('' si está bien).
+function validarRespuesta(texto, archivo) {
+  const errores = { texto: '', archivo: '' };
+  const limpio = String(texto || '').trim();
+  if (!limpio) errores.texto = 'Escribe tu respuesta para el técnico.';
+  else if (limpio.length > MAX_RESPUESTA) errores.texto = `Máximo ${MAX_RESPUESTA} caracteres.`;
+
+  if (archivo) {
+    if (!TIPOS_ARCHIVO.includes(archivo.type)) errores.archivo = 'Solo se aceptan imágenes (PNG o JPG) o PDF.';
+    else if (archivo.size > MAX_BYTES_ARCHIVO) errores.archivo = 'El archivo no puede pesar más de 2 MB.';
+  }
+  return errores;
+}
+
+// Lee un archivo del navegador y devuelve solo su contenido en base64.
+function leerComoBase64(archivo) {
+  return new Promise((resolver, rechazar) => {
+    const lector = new FileReader();
+    // readAsDataURL da "data:<tipo>;base64,<datos>"; nos quedamos con <datos>.
+    lector.onload = () => resolver(String(lector.result).split(',')[1] || '');
+    lector.onerror = () => rechazar(lector.error);
+    lector.readAsDataURL(archivo);
+  });
+}
+
 // ---------- Todo lo de abajo solo corre en el navegador ----------
 if (typeof document !== 'undefined') {
   const form = document.getElementById('form-consulta');
@@ -96,11 +127,67 @@ if (typeof document !== 'undefined') {
     resultado.hidden = false;
   }
 
+  // ----- Respuesta del solicitante (SOP-44) -----
+  const formRespuesta = document.getElementById('form-respuesta');
+  const campoTexto = document.getElementById('texto-respuesta');
+  const campoArchivo = document.getElementById('archivo-respuesta');
+  const botonResponder = document.getElementById('boton-responder');
+  const errorRespuesta = document.getElementById('error-respuesta');
+  const avisoEnviada = document.getElementById('respuesta-enviada');
+
+  function marcarCampo(campo, idError, mensaje) {
+    document.getElementById(idError).textContent = mensaje;
+    campo.classList.toggle('campo-invalido', mensaje !== '');
+    campo.setAttribute('aria-invalid', mensaje !== '' ? 'true' : 'false');
+  }
+
+  formRespuesta.addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+    errorRespuesta.textContent = '';
+    const archivo = campoArchivo.files[0] || null;
+    const errores = validarRespuesta(campoTexto.value, archivo);
+    marcarCampo(campoTexto, 'error-texto-respuesta', errores.texto);
+    marcarCampo(campoArchivo, 'error-archivo-respuesta', errores.archivo);
+    if (errores.texto || errores.archivo) return;
+
+    botonResponder.disabled = true;
+    botonResponder.textContent = 'Enviando…';
+    try {
+      const cuerpo = { texto: campoTexto.value.trim() };
+      if (archivo) {
+        cuerpo.archivo = { nombre: archivo.name, tipo: archivo.type, datos: await leerComoBase64(archivo) };
+      }
+      const codigo = document.getElementById('res-codigo').textContent;
+      const res = await fetch('/api/solicitudes/' + encodeURIComponent(codigo) + '/respuesta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cuerpo),
+      });
+      const datos = await res.json().catch(() => ({}));
+      if (res.ok) {
+        formRespuesta.reset();
+        mostrarSolicitud(datos);
+        avisoEnviada.hidden = false;
+      } else if (datos.campos) {
+        if (datos.campos.texto) marcarCampo(campoTexto, 'error-texto-respuesta', datos.campos.texto);
+        if (datos.campos.archivo) marcarCampo(campoArchivo, 'error-archivo-respuesta', datos.campos.archivo);
+      } else {
+        errorRespuesta.textContent = datos.error || 'No pudimos enviar tu respuesta. Intenta de nuevo.';
+      }
+    } catch (err) {
+      errorRespuesta.textContent = 'No hay conexión con el servidor. Revisa tu internet e intenta de nuevo.';
+    } finally {
+      botonResponder.disabled = false;
+      botonResponder.textContent = 'Enviar respuesta';
+    }
+  });
+
   // Pide la solicitud a la API y muestra el resultado o el error.
   async function consultar(codigo) {
     boton.disabled = true;
     boton.textContent = 'Consultando…';
     resultado.hidden = true;
+    avisoEnviada.hidden = true;
     try {
       const res = await fetch('/api/solicitudes/' + encodeURIComponent(codigo));
       const datos = await res.json().catch(() => ({}));
@@ -145,5 +232,12 @@ if (typeof document !== 'undefined') {
 
 // Permite usar estas funciones en las pruebas con Jest (en el navegador no existe "module").
 if (typeof module !== 'undefined') {
-  module.exports = { ESTADOS, prepararCodigo, validarCodigo, calcularPasos, formatearFecha };
+  module.exports = {
+    ESTADOS,
+    prepararCodigo,
+    validarCodigo,
+    calcularPasos,
+    formatearFecha,
+    validarRespuesta,
+  };
 }

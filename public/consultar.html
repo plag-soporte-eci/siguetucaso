@@ -46,7 +46,29 @@
       <div id="caja-nota" class="nota" hidden>
         <p class="nota-titulo">El técnico necesita esto de ti:</p>
         <p id="res-nota"></p>
+
+        <form id="form-respuesta" class="form-respuesta" novalidate>
+          <label for="texto-respuesta">Tu respuesta</label>
+          <textarea id="texto-respuesta" name="texto" rows="3" maxlength="1000"
+                    aria-describedby="error-texto-respuesta"
+                    placeholder="Cuéntale al técnico lo que te pidió."></textarea>
+          <p id="error-texto-respuesta" class="mensaje-error" role="alert"></p>
+
+          <label for="archivo-respuesta">Adjuntar archivo <span class="opcional">(opcional)</span></label>
+          <input id="archivo-respuesta" name="archivo" type="file"
+                 accept="image/png,image/jpeg,application/pdf"
+                 aria-describedby="ayuda-archivo error-archivo-respuesta">
+          <p id="ayuda-archivo" class="ayuda">Imagen (PNG o JPG) o PDF de máximo 2 MB.</p>
+          <p id="error-archivo-respuesta" class="mensaje-error" role="alert"></p>
+
+          <button id="boton-responder" type="submit">Enviar respuesta</button>
+          <p id="error-respuesta" class="mensaje-error" role="alert"></p>
+        </form>
       </div>
+
+      <p id="respuesta-enviada" class="mensaje-ok" role="status" hidden>
+        Enviamos tu respuesta. El técnico ya puede verla y tu solicitud volvió a revisión.
+      </p>
 
       <p id="linea-responsable" class="dato" hidden>
         Te atiende: <span id="res-responsable"></span>

@@ -124,6 +124,61 @@ if (typeof document !== 'undefined') {
     campoClave.focus();
   }
 
+  // Descarga el adjunto de una respuesta. Se usa fetch (y no un enlace normal)
+  // porque la ruta exige la clave en el encabezado X-Tecnico-Clave.
+  async function descargarArchivo(codigo, respuesta, boton) {
+    boton.disabled = true;
+    try {
+      const ruta = '/api/tecnico/solicitudes/' + encodeURIComponent(codigo) +
+        '/respuestas/' + respuesta.id + '/archivo';
+      const res = await fetch(ruta, { headers: { 'X-Tecnico-Clave': leerClave() } });
+      if (res.status === 401) {
+        borrarClave();
+        mostrarFormularioClave('Clave incorrecta. Intenta de nuevo.');
+        return;
+      }
+      if (!res.ok) {
+        boton.textContent = 'No se pudo descargar';
+        return;
+      }
+      const url = URL.createObjectURL(await res.blob());
+      const enlace = document.createElement('a');
+      enlace.href = url;
+      enlace.download = respuesta.archivoNombre;
+      enlace.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      boton.disabled = false;
+    }
+  }
+
+  // Lista las respuestas del solicitante (SOP-44), si tiene.
+  function pintarRespuestas(item, solicitud) {
+    const respuestas = solicitud.respuestas || [];
+    const lista = item.querySelector('.s-respuestas');
+    item.querySelector('.respuestas').hidden = respuestas.length === 0;
+
+    respuestas.forEach((respuesta) => {
+      const fila = document.createElement('li');
+      const fecha = document.createElement('span');
+      fecha.className = 'respuesta-fecha';
+      fecha.textContent = formatearFecha(respuesta.creadoEn);
+      const texto = document.createElement('p');
+      texto.textContent = respuesta.texto;
+      fila.append(fecha, texto);
+
+      if (respuesta.archivoNombre) {
+        const boton = document.createElement('button');
+        boton.type = 'button';
+        boton.className = 'boton-secundario boton-archivo';
+        boton.textContent = 'Descargar ' + respuesta.archivoNombre;
+        boton.addEventListener('click', () => descargarArchivo(solicitud.codigo, respuesta, boton));
+        fila.append(boton);
+      }
+      lista.append(fila);
+    });
+  }
+
   // Pinta una solicitud copiando la plantilla. Todo con textContent (no se inserta HTML).
   function crearItem(solicitud) {
     const item = plantilla.content.firstElementChild.cloneNode(true);
@@ -138,6 +193,8 @@ if (typeof document !== 'undefined') {
     poner('.s-intento', solicitud.queIntento);
     poner('.s-creado', formatearFecha(solicitud.creadoEn));
     poner('.s-actualizado', formatearFecha(solicitud.actualizadoEn));
+
+    pintarRespuestas(item, solicitud);
 
     const etiqueta = item.querySelector('.s-estado');
     // Pinta la etiqueta del estado (se reutiliza cuando el técnico lo cambia).

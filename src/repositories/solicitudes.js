@@ -166,7 +166,89 @@ async function cambiarEstado(codigo, estado, notaTecnico = null) {
   return convertirSolicitud(resultado.rows[0]);
 }
 
+// ---------- SOP-44: respuestas del solicitante ----------
+
+function convertirRespuesta(fila) {
+  return {
+    id: fila.id,
+    texto: fila.texto,
+    archivoNombre: fila.archivo_nombre,
+    archivoTipo: fila.archivo_tipo,
+    creadoEn: fila.creado_en,
+  };
+}
+
+// Guarda la respuesta y devuelve la solicitud a "En revisión".
+// Recibe la solicitud ya encontrada (con su id) y la respuesta validada.
+async function guardarRespuesta(solicitud, respuesta) {
+  if (!db.pool) {
+    throw new Error('La base de datos no está configurada');
+  }
+
+  const archivo = respuesta.archivo || {};
+  await db.pool.query(
+    `INSERT INTO respuestas (solicitud_id, texto, archivo_nombre, archivo_tipo, archivo_datos)
+     VALUES ($1, $2, $3, $4, $5)`,
+    [solicitud.id, respuesta.texto, archivo.nombre || null, archivo.tipo || null, archivo.datos || null],
+  );
+
+  return cambiarEstado(solicitud.codigo, 'En revisión');
+}
+
+// Respuestas de varias solicitudes, sin el contenido del archivo (solo su nombre y tipo).
+// Devuelve un objeto { [solicitudId]: [respuestas, de la más antigua a la más reciente] }.
+async function respuestasPorSolicitud(ids) {
+  if (!db.pool) {
+    throw new Error('La base de datos no está configurada');
+  }
+  if (ids.length === 0) {
+    return {};
+  }
+
+  // Arma "$1, $2, $3…" para el IN (un parámetro por id).
+  const marcadores = ids.map((_, i) => `$${i + 1}`).join(', ');
+  const resultado = await db.pool.query(
+    `SELECT id, solicitud_id, texto, archivo_nombre, archivo_tipo, creado_en
+     FROM respuestas
+     WHERE solicitud_id IN (${marcadores})
+     ORDER BY creado_en ASC, id ASC`,
+    ids,
+  );
+
+  const agrupadas = {};
+  resultado.rows.forEach((fila) => {
+    if (!agrupadas[fila.solicitud_id]) agrupadas[fila.solicitud_id] = [];
+    agrupadas[fila.solicitud_id].push(convertirRespuesta(fila));
+  });
+  return agrupadas;
+}
+
+// Archivo adjunto de una respuesta, solo si pertenece a la solicitud con ese código.
+// Devuelve { nombre, tipo, datos } o null.
+async function buscarArchivo(codigo, idRespuesta) {
+  if (!db.pool) {
+    throw new Error('La base de datos no está configurada');
+  }
+
+  const resultado = await db.pool.query(
+    `SELECT r.archivo_nombre, r.archivo_tipo, r.archivo_datos
+     FROM respuestas r
+     JOIN solicitudes s ON s.id = r.solicitud_id
+     WHERE s.codigo = $1 AND r.id = $2 AND r.archivo_datos IS NOT NULL`,
+    [codigo, idRespuesta],
+  );
+
+  if (resultado.rows.length === 0) {
+    return null;
+  }
+  const fila = resultado.rows[0];
+  return { nombre: fila.archivo_nombre, tipo: fila.archivo_tipo, datos: fila.archivo_datos };
+}
+
 module.exports = {
+  guardarRespuesta,
+  respuestasPorSolicitud,
+  buscarArchivo,
   crearSolicitud,
   convertirSolicitud,
   buscarPorCodigo,
