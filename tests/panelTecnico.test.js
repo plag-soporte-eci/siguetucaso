@@ -20,6 +20,22 @@ describe('tecnico.html', () => {
     expect(res.text).toContain('js/tecnico.js');
   });
 
+  test('se abre en /tecnico, sin escribir .html (criterio 1 de SOP-14)', async () => {
+    const res = await request(app).get('/tecnico');
+
+    expect(res.status).toBe(200);
+    expect(res.text).toContain('id="form-clave"');
+  });
+
+  test('las demás páginas también abren sin .html y lo que no existe sigue en 404', async () => {
+    const consultar = await request(app).get('/consultar');
+    const noExiste = await request(app).get('/no-existe');
+
+    expect(consultar.status).toBe(200);
+    expect(consultar.text).toContain('js/consultar.js');
+    expect(noExiste.status).toBe(404);
+  });
+
   test('usa exactamente los estados del contrato (sección 7.2)', () => {
     expect(ESTADOS).toEqual(['Recibida', 'En revisión', 'Esperando tu respuesta', 'Resuelta']);
   });
