@@ -105,11 +105,14 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 
 | Sprint | Fechas | Objetivo |
 |---|---|---|
-| Sprint 0 · Arranque | 9 – 10 nov (cerrado) | Cliente, producto, repo, tablero y esqueleto |
-| **Sprint 1 · Registro y consulta** | **10 nov 12:00 → jue 12 nov 12:00** | Un solicitante registra una solicitud y consulta su estado con un código, sin iniciar sesión |
-| Sprint 2 · Gestión del técnico | 12 nov 13:00 → 19 nov | El técnico gestiona las solicitudes y el solicitante ve el avance, quién lo atiende y lo que le piden |
+| Sprint 0 · Arranque | 9 – 10 nov ✅ | Cliente, producto, repo, tablero y esqueleto |
+| Sprint 1 · Registro y consulta | 10 nov 12:00 → jue 12 nov 12:00 ✅ (release v1.0.0) | Un solicitante registra una solicitud y consulta su estado con un código, sin iniciar sesión |
+| Sprint 2 · Gestión del técnico | 12 nov 13:00 → 19 nov ✅ (release v2.0.0) | El técnico gestiona las solicitudes y el solicitante ve el avance, quién lo atiende y lo que le piden |
+| Cierre del proyecto | desde el 26 nov | Pulir el producto con lo aprendido en las Reviews: respuesta del solicitante, rediseño visual y documentación final |
 
-**El Sprint 1 dura 2 días. Lo que no se integre a `main` el miércoles 11 en la noche no entra en la demo.**
+**Estado actual:** los Sprints 1 y 2 están cerrados y sus historias en Jira están en Finalizado. Las tareas de cierre son SOP-44, SOP-45 y SOP-46 (sección 4.3).
+
+El calendario de abajo es el que se siguió en los Sprints 1 y 2; se deja como registro.
 
 | Cuándo | Qué | Quién |
 |---|---|---|
@@ -131,8 +134,11 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 | 1 | **SOP-36** Guía del equipo (este archivo) ✅ | 1 | — | A todos (contrato técnico) |
 | 2 | **SOP-12 · H2 parte 1:** `src/services/codigo.js` + su prueba (generador del código) — **hoy mismo, PR pequeño** ✅ | 1 | — | Nicolas (SOP-11 lo usa) |
 | 3 | **SOP-12 · H2 parte 2:** pantalla de confirmación con el código y botón "Copiar" (coordinar con Sebastián A.) ✅ | 1 | SOP-11 (formulario y API) | SOP-13 |
-| 4 | Preparar y dirigir la **Sprint Review 1** con 2 usuarios; medir el indicador | 1 | SOP-33 (v1.0) | — |
-| 5 | Repriorizar el backlog con el feedback; aceptar o rechazar historias | 1–2 | — | Planning 2 |
+| 4 | Preparar y dirigir la **Sprint Review 1** con 2 usuarios; medir el indicador ✅ | 1 | SOP-33 (v1.0) | — |
+| 5 | Repriorizar el backlog con el feedback; aceptar o rechazar historias ✅ | 1–2 | — | Planning 2 |
+| 6 | **SOP-44** El solicitante responde lo que le pide el técnico (texto + 1 archivo; API, pantalla y prueba) | Cierre | SOP-16 | SOP-45 |
+| 7 | **SOP-45** Rediseño del front con la identidad visual de DiNNo y limpieza del código | Cierre | SOP-44 | — |
+| 8 | **SOP-46** README renovado y documentación actualizada | Cierre | — | — |
 
 #### Sebastián Albarracín Silva — Scrum Master + Developer Frontend
 
@@ -140,13 +146,13 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 |---|---|---|---|---|
 | 1 | **SOP-11 · H1 parte frontend:** `public/index.html` con el formulario guiado y validaciones en el navegador. **Empieza ya contra el contrato de la sección 7.4** (no esperes la API) ✅ | 1 | — | SOP-12 parte 2 |
 | 2 | **SOP-13 · H3 parte frontend:** `public/consultar.html` con el campo del código y la línea de pasos del estado ✅ | 1 | Contrato 7.4 (probar con la API de la tarea 7 cuando esté) | Review 1 |
-| 3 | Revisar que todo funcione en celular | 1 | — | Review 1 |
+| 3 | Revisar que todo funcione en celular ✅ | 1 | — | Review 1 |
 | 4 | Pantallas del técnico `public/tecnico.html` para **SOP-14, SOP-15, SOP-16, SOP-17** (con cada dueño) ✅ | 2 | API de cada historia | SOP-35 |
-| 5 | Organizar la **daily** de las 8 p. m. y guardar evidencia (captura o nota corta de cada una) | 1–2 | — | — |
-| 6 | Vigilar el tablero: WIP ≤ 2, bloqueos con *flag*, PR sin revisar > 24 h | 1–2 | — | — |
+| 5 | Organizar la **daily** de las 8 p. m. y guardar evidencia (captura o nota corta de cada una) ✅ | 1–2 | — | — |
+| 6 | Vigilar el tablero: WIP ≤ 2, bloqueos con *flag*, PR sin revisar > 24 h ✅ | 1–2 | — | — |
 | 7 | **SOP-13 · H3 parte backend:** `GET /api/solicitudes/:codigo` + prueba ✅ | 1 | SOP-11 parte backend | SOP-13 pantalla |
-| 8 | Registrar las **métricas Lean** al final de cada sprint: tiempo de ciclo por historia (reporte *Cycle time* de Jira) e historias terminadas | 1–2 | — | Retro |
-| 9 | Facilitar la **retrospectiva**: identificar 2 desperdicios reales, elegir 1 mejora, responsable y cómo medirla | 1–2 | Review | — |
+| 8 | Registrar las **métricas Lean** al final de cada sprint: tiempo de ciclo por historia (reporte *Cycle time* de Jira) e historias terminadas ✅ | 1–2 | — | Retro |
+| 9 | Facilitar la **retrospectiva**: identificar 2 desperdicios reales, elegir 1 mejora, responsable y cómo medirla ✅ | 1–2 | Review | — |
 | 10 | **SOP-17 · H7** Asignar responsable (API + prueba; pantalla con Sebastián A.) ✅ | 2 | SOP-14 | SOP-35 |
 
 #### Nicolas Toro — Developer Backend y calidad
@@ -154,7 +160,7 @@ Jira: Por hacer → En curso → En revisión (PR) → Finalizado
 | Orden | Tarea | Sprint | Depende de | Bloquea a |
 |---|---|---|---|---|
 | 1 | **SOP-11 · H1 parte backend:** `src/constantes.js`, `src/schema.sql`, `src/initDb.js`, `src/repositories/solicitudes.js`, `POST /api/solicitudes` + pruebas. **Es la tarea más urgente del sprint** ✅ | 1 | SOP-12 parte 1 (si aún no está, usar un código temporal y reemplazarlo) | Sebastián A. (SOP-13), Juan Sebastián (SOP-12 parte 2), Sebastián A. (integración) |
-| 2 | Ayudar a que las pruebas de los demás usen pg-mem bien (sección 7.6) | 1–2 | — | — |
+| 2 | Ayudar a que las pruebas de los demás usen pg-mem bien (sección 7.6) ✅ | 1–2 | — | — |
 | 3 | **SOP-15 · H5** Cambiar estado (API + prueba) ✅ | 2 | SOP-14 | SOP-16 |
 | 4 | **SOP-16 · H6** "Esperando tu respuesta" con nota (API + prueba) ✅ | 2 | SOP-15 | SOP-35 |
 
@@ -199,6 +205,9 @@ flowchart LR
   S16 --> S35[SOP-35 Release v2.0 ✅]
   S17 --> S35
   S32 --> S34[SOP-34 Logs y rollback ✅]
+  S35 --> S44[SOP-44 Respuesta del solicitante]
+  S44 --> S45[SOP-45 Rediseño DiNNo]
+  S35 --> S46[SOP-46 Documentación final]
 ```
 
 **Camino crítico del Sprint 1** (si uno se atrasa, se atrasa la demo):

@@ -16,7 +16,7 @@ Una historia de usuario está **Terminada** solo si cumple TODO lo siguiente:
 ## Está disponible para la demostración
 - [ ] Está desplegada en el entorno de demo.
 - [ ] El README está actualizado si cambió cómo se ejecuta o configura el proyecto.
-- [ ] La tarjeta está en la columna **Hecho** en Jira.
+- [ ] La tarjeta está en la columna **Finalizado** en Jira.
 
 > Si una historia no cumple algún punto, **no está terminada** y no cuenta para el sprint.
 > Acordada por el equipo el 10/11/2026 por el grupo de WhatsApp del equipo. Integrantes: Juan Sebastián Ortega Muñoz (Product Owner), Sebastián Albarracín Silva (Scrum Master + Developer Frontend), David Salomón Baena Rubio (DevOps), Nicolas Toro (Backend). Cambios a esta DoD se registran abajo.
