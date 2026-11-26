@@ -82,7 +82,7 @@ describe('GET /api/solicitudes/:codigo', () => {
   test('muestra la nota del técnico solo cuando está "Esperando tu respuesta"', async () => {
     const codigo = await crearSolicitud();
 
-    // Mientras llega el Sprint 2, se cambia el estado directo en la base de prueba.
+    // Se cambia el estado directo en la base de prueba para no depender de la API del técnico.
     await db.pool.query(
       "UPDATE solicitudes SET estado = 'En revisión', nota_tecnico = 'Envía una captura' WHERE codigo = $1",
       [codigo]

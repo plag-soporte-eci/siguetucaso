@@ -1,161 +1,708 @@
-/* Colores y tipografía base: cambiar aquí afecta toda la página */
-:root {
-  --fondo: #f4f6fb;
-  --tarjeta: #ffffff;
-  --texto: #1f2937;
-  --suave: #6b7280;
-  --primario: #2563eb;
-  --ok: #15803d;
-  --error: #b91c1c;
+/* Estilos de SigueTuCaso con la identidad visual de DiNNo:
+   crema de fondo, petróleo para la marca, naranja solo para la acción principal
+   y estados con color + forma + palabra. */
+
+/* ---------- Fuente (Plus Jakarta Sans, licencia OFL: fonts/OFL.txt) ---------- */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("fonts/plus-jakarta-sans-500.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
 }
 
-* {
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("fonts/plus-jakarta-sans-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("fonts/plus-jakarta-sans-800.woff2") format("woff2");
+  font-weight: 800;
+  font-display: swap;
+}
+
+/* ---------- Tokens ---------- */
+:root {
+  --font: "Plus Jakarta Sans", system-ui, sans-serif;
+
+  --r-card: 20px;
+  --r-tile: 16px;
+  --r-btn: 14px;
+  --r-input: 12px;
+  --r-chip: 999px;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 150ms;
+
+  --orange-night: #ff8456;
+  --grad-petrol: linear-gradient(150deg, #0b2d36 0%, #12505a 60%, #1c6a6e 100%);
+
+  /* Tema claro */
+  --bg: #faf7f1;
+  --surface: #ffffff;
+  --surface-2: #f2efe8;
+  --text: #10252b;
+  --text-2: #5e6b70;
+  --border: #e2e6e3;
+  --border-strong: #8a9699;
+  --accent: #f46935;
+  --accent-pressed: #db5626;
+  --accent-text: #b83f14;
+  --on-accent: #10252b;
+  --brand: #103b46;
+  --brand-mid: #1d5661;
+  --on-brand: #faf7f1;
+  --on-brand-2: #a9bdc0;
+  --ok: #2b8f62;
+  --limited: #b7801f;
+  --reserved: #4e66c9;
+  --error: #c8453a;
+  --info: #1d5661;
+  --focus-ring: 0 0 0 3px rgba(244, 105, 53, 0.45);
+  --shadow-soft: 0 1px 2px rgba(16, 37, 43, 0.05), 0 10px 28px -12px rgba(16, 37, 43, 0.18);
+}
+
+/* Tema oscuro: sigue la preferencia del sistema */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b2d36;
+    --surface: #103b46;
+    --surface-2: #164853;
+    --text: #faf7f1;
+    --text-2: #a9bdc0;
+    --border: #24525d;
+    --border-strong: #5e8a93;
+    --accent: #ff8456;
+    --accent-pressed: #f46935;
+    --accent-text: #ff8456;
+    --on-accent: #0b2d36;
+    --brand: #0b2d36;
+    --brand-mid: #164853;
+    --ok: #3fbf86;
+    --limited: #e0a93b;
+    --reserved: #8da2f0;
+    --error: #ff7b6e;
+    --info: #7fc1cb;
+    --focus-ring: 0 0 0 3px rgba(255, 132, 86, 0.55);
+    --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.25), 0 10px 28px -12px rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: var(--fondo);
-  color: var(--texto);
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
 }
 
-.card {
-  width: 100%;
-  max-width: 480px;
-  padding: 32px 24px;
-  background: var(--tarjeta);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-  text-align: center;
+h1,
+h2 {
+  margin: 0;
+  color: var(--text);
 }
 
 h1 {
-  margin: 0 0 12px;
   font-size: 2rem;
-  color: var(--primario);
+  line-height: 1.125;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
-.lead {
-  margin: 0 0 20px;
-  line-height: 1.5;
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.17;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.badge {
-  display: inline-block;
-  margin: 0 0 20px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: #e0e7ff;
-  color: var(--primario);
-  font-weight: 600;
-}
-
-.status {
+p {
   margin: 0;
-  font-size: 0.9rem;
-  color: var(--suave);
 }
 
-.ok {
-  color: var(--ok);
+a {
+  color: var(--accent-text);
+  text-underline-offset: 3px;
 }
 
-.error {
-  color: var(--error);
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
-/* ---------- Consulta de solicitud (consultar.html, SOP-13) ---------- */
-.card-consulta {
-  text-align: left;
+.secundario {
+  font-size: 0.875rem;
+  line-height: 1.43;
+  color: var(--text-2);
 }
 
-.card-consulta h1 {
-  font-size: 1.6rem;
-}
-
-.form-consulta label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-
-.form-consulta input {
-  width: 100%;
-  padding: 12px;
-  font-size: 1.2rem;
+.kicker {
+  font-size: 0.6875rem;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
 }
 
-.form-consulta input:focus {
-  outline: 2px solid var(--primario);
-  border-color: var(--primario);
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.form-consulta input.campo-invalido {
-  border-color: var(--error);
+/* ---------- Barra superior ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 64px;
+  padding: 0 16px;
+  background: var(--brand);
+  color: var(--on-brand);
 }
 
-.mensaje-error {
-  min-height: 1.2em;
-  margin: 6px 0 12px;
-  font-size: 0.9rem;
-  color: var(--error);
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--on-brand);
+  text-decoration: none;
 }
 
-.form-consulta button {
-  width: 100%;
-  padding: 12px;
+.marca-punto {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.topbar-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.topbar-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: var(--r-input);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--on-brand-2);
+  text-decoration: none;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.topbar-nav a:hover {
+  background: var(--brand-mid);
+  color: var(--on-brand);
+}
+
+.topbar-nav a[aria-current="page"] {
+  background: var(--brand-mid);
+  color: var(--on-brand);
+  box-shadow: inset 0 -3px 0 var(--accent);
+}
+
+.topbar-etiqueta {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--on-brand-2);
+}
+
+/* ---------- Portada (solo en la página de reporte) ---------- */
+.hero {
+  padding: 40px 16px 88px;
+  background: var(--grad-petrol);
+  color: var(--on-brand);
+}
+
+.hero-contenido {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.hero .kicker {
+  margin-bottom: 12px;
+  color: var(--orange-night);
+}
+
+.hero h1 {
+  color: var(--on-brand);
+  font-size: 2.25rem;
+}
+
+.hero-texto {
+  margin-top: 12px;
+  font-size: 1.0625rem;
+  color: var(--on-brand-2);
+}
+
+/* ---------- Página y tarjetas ---------- */
+.pagina {
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+}
+
+.pagina-estrecha {
+  max-width: 592px;
+}
+
+.pagina-ancha {
+  max-width: 1232px;
+}
+
+.pagina-sobre-hero {
+  margin-top: -64px;
+  padding-top: 0;
+}
+
+.encabezado {
+  margin-bottom: 24px;
+}
+
+.encabezado .secundario {
+  margin-top: 8px;
   font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-  background: var(--primario);
-  border: none;
-  border-radius: 8px;
+}
+
+.card {
+  padding: 24px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-soft);
+}
+
+.volver {
+  margin-top: 24px;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.volver a {
+  font-weight: 700;
+}
+
+/* ---------- Botones ---------- */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.33;
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  border-radius: var(--r-btn);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.boton:active {
+  transform: scale(0.98);
+}
+
+.boton:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+
+.boton-primario {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.boton-primario:hover {
+  background: var(--accent-pressed);
+}
+
+.boton-secundario {
+  background: var(--brand);
+  color: var(--on-brand);
+}
+
+.boton-secundario:hover {
+  background: var(--brand-mid);
+}
+
+.boton-borde {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.boton-borde:hover {
+  background: var(--surface-2);
+}
+
+.boton-ancho {
+  width: 100%;
+}
+
+.boton-chico {
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 0.875rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .boton-secundario {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+  }
+}
+
+/* ---------- Campos ---------- */
+.campo {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.opcional {
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+input,
+select,
+textarea {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 14px;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--r-input);
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+
+textarea {
+  resize: vertical;
+}
+
+select {
+  appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235E6B70' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
   cursor: pointer;
 }
 
-.form-consulta button:disabled {
-  opacity: 0.6;
-  cursor: wait;
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--text-2);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+::placeholder {
+  color: var(--text-2);
+  opacity: 0.8;
+}
+
+input[type="file"] {
+  padding: 8px;
+  font-size: 0.875rem;
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+  min-height: 36px;
+  margin-right: 12px;
+  padding: 0 14px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.campo-invalido,
+.campo-invalido:hover {
+  border-color: var(--error);
+}
+
+.ayuda {
+  margin-top: 6px;
+  font-size: 0.875rem;
+  color: var(--text-2);
+}
+
+/* Error junto al campo, con ícono de alerta */
+.mensaje-error {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  color: var(--error);
+}
+
+.mensaje-error:empty {
+  display: none;
+}
+
+.mensaje-error::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 8v4M12 16h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 8v4M12 16h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.mensaje-ok {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ok);
+}
+
+.mensaje-ok:empty {
+  display: none;
+}
+
+/* ---------- Formulario de reporte ---------- */
+.formulario fieldset {
+  margin: 0 0 8px;
+  padding: 0;
+  border: 0;
+}
+
+.formulario fieldset + fieldset {
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+/* float hace que el legend se comporte como un título normal y no se monte sobre el borde */
+.formulario legend {
+  float: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.formulario legend + * {
+  clear: both;
+}
+
+.numero-paso {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--on-brand);
+  font-size: 0.8125rem;
+  font-weight: 800;
+}
+
+#error-general:not(:empty) {
+  margin-bottom: 12px;
+}
+
+/* ---------- Confirmación con el código ---------- */
+.confirmacion {
+  text-align: center;
+}
+
+.icono-exito {
+  position: relative;
+  display: inline-flex;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ok) 15%, transparent);
+}
+
+.icono-exito::after {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  background: var(--ok);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.confirmacion h2 {
+  margin-bottom: 8px;
+}
+
+.codigo-generado {
+  margin: 16px 0;
+  padding: 20px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--r-tile);
+}
+
+/* El foco llega aquí solo para que el lector de pantalla lea el código */
+.codigo-generado:focus {
+  box-shadow: none;
+}
+
+.mensaje-copiar {
+  min-height: 20px;
+  margin: 8px 0 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.mensaje-copiar.ok {
+  color: var(--ok);
+}
+
+.mensaje-copiar.error {
+  color: var(--error);
+}
+
+.aviso-guardar {
+  margin: 16px 0 24px;
+  padding: 14px 16px;
+  font-size: 0.875rem;
+  text-align: left;
+  background: color-mix(in srgb, var(--info) 12%, transparent);
+  border-radius: 14px;
+}
+
+/* ---------- Consulta ---------- */
+.form-consulta label {
+  margin-bottom: 8px;
+}
+
+.fila-consulta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fila-consulta input {
+  flex: 1 1 200px;
+  width: auto;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fila-consulta .boton {
+  flex: 1 1 120px;
 }
 
 .resultado {
   margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
 }
 
 .resultado-codigo {
-  margin: 0 0 4px;
-  font-size: 1.1rem;
+  font-size: 1.125rem;
 }
 
-.resultado-servicio,
-.dato {
-  margin: 0 0 6px;
-  color: var(--suave);
+.resultado-codigo strong {
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.resultado-servicio {
+  margin-top: 2px;
+  font-size: 0.875rem;
+  color: var(--text-2);
 }
 
 /* Línea de pasos vertical: se lee bien en celular */
 .pasos {
-  list-style: none;
-  margin: 20px 0;
+  margin: 24px 0;
   padding: 0;
+  list-style: none;
 }
 
 .paso {
   position: relative;
-  padding: 0 0 18px 34px;
-  color: var(--suave);
+  min-height: 28px;
+  padding: 2px 0 20px 40px;
+  color: var(--text-2);
+}
+
+.paso:last-child {
+  padding-bottom: 0;
 }
 
 .paso::before {
@@ -163,36 +710,30 @@ h1 {
   position: absolute;
   left: 0;
   top: 0;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #d1d5db;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border-strong);
   border-radius: 50%;
-  background: var(--tarjeta);
+  background: var(--surface);
 }
 
-/* Línea que une un paso con el siguiente */
 .paso:not(:last-child)::after {
   content: "";
   position: absolute;
-  left: 11px;
-  top: 24px;
+  left: 13px;
+  top: 30px;
   bottom: 2px;
   width: 2px;
-  background: #d1d5db;
+  background: var(--border);
 }
 
 .paso-hecho {
-  color: var(--texto);
+  color: var(--text);
 }
 
 .paso-hecho::before {
-  content: "✓";
-  color: #fff;
-  font-size: 0.75rem;
-  line-height: 20px;
-  text-align: center;
   border-color: var(--ok);
-  background: var(--ok);
+  background: var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 14px no-repeat;
 }
 
 .paso-hecho::after {
@@ -201,336 +742,282 @@ h1 {
 
 .paso-actual {
   font-weight: 700;
-  color: var(--primario);
+  color: var(--text);
 }
 
 .paso-actual::before {
-  border-color: var(--primario);
-  background: var(--primario);
-  box-shadow: 0 0 0 4px #e0e7ff;
+  border-color: var(--accent);
+  background: radial-gradient(circle, var(--accent) 0 6px, var(--surface) 7px);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
+/* Aviso en línea (por ejemplo, "Enviamos tu respuesta") */
+.aviso {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  font-size: 0.875rem;
+  border-radius: 14px;
+}
+
+.aviso-ok {
+  font-weight: 700;
+  color: var(--text);
+  background: color-mix(in srgb, var(--ok) 14%, transparent);
+  box-shadow: inset 4px 0 0 var(--ok);
+}
+
+/* Lo que pide el técnico: aviso de atención en ámbar, con el formulario de respuesta */
 .nota {
-  margin: 0 0 16px;
-  padding: 12px 14px;
-  border-left: 4px solid #d97706;
-  border-radius: 6px;
-  background: #fef3c7;
-}
-
-.nota p {
-  margin: 0;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: color-mix(in srgb, var(--limited) 12%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--limited) 35%, transparent);
+  border-radius: var(--r-tile);
 }
 
 .nota-titulo {
-  margin-bottom: 4px !important;
-  font-weight: 600;
-}
-
-.volver {
-  margin: 24px 0 0;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-.volver a {
-  color: var(--primario);
-}
-
-/* ---------- Formulario de reporte (index.html, SOP-38) ---------- */
-.card-formulario {
-  text-align: left;
-}
-
-.card-formulario h1 {
-  font-size: 1.6rem;
-}
-
-.formulario fieldset {
-  margin: 0 0 16px;
-  padding: 0;
-  border: none;
-}
-
-.formulario legend {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  font-size: 1.05rem;
+  gap: 10px;
   font-weight: 700;
 }
 
-.numero-paso {
+.nota-titulo::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: var(--limited);
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+
+.nota-texto {
+  margin-top: 6px;
+  font-size: 1.0625rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.form-respuesta {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid color-mix(in srgb, var(--limited) 30%, transparent);
+}
+
+.datos {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-tile);
+}
+
+.datos dt {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.datos dd {
+  margin: 2px 0 0;
+  font-weight: 700;
+}
+
+/* ---------- Estados: color + forma + palabra ---------- */
+.etiqueta-estado {
+  --estado: var(--text-2);
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 26px;
+  gap: 6px;
   height: 26px;
-  border-radius: 50%;
-  background: var(--primario);
-  color: #fff;
-  font-size: 0.85rem;
-}
-
-.opcional {
-  font-weight: 400;
-  color: var(--suave);
-}
-
-.formulario label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-
-.formulario input,
-.formulario select,
-.formulario textarea {
-  width: 100%;
-  padding: 12px;
-  font: inherit;
-  font-size: 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background: #fff;
-}
-
-.formulario textarea {
-  resize: vertical;
-}
-
-.formulario input:focus,
-.formulario select:focus,
-.formulario textarea:focus {
-  outline: 2px solid var(--primario);
-  border-color: var(--primario);
-}
-
-.formulario .campo-invalido {
-  border-color: var(--error);
-}
-
-.ayuda {
-  margin: 4px 0 0;
-  font-size: 0.85rem;
-  color: var(--suave);
-}
-
-.formulario button {
-  width: 100%;
-  padding: 14px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-  background: var(--primario);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.formulario button:disabled {
-  opacity: 0.6;
-  cursor: wait;
-}
-
-.confirmacion {
-  text-align: center;
-}
-
-.confirmacion h2 {
-  margin: 0 0 8px;
-  color: var(--ok);
-}
-
-.codigo-generado {
-  margin: 12px 0;
-  font-size: 2rem;
+  padding: 0 10px;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--primario);
-}
-
-.confirmacion a {
-  color: var(--primario);
-}
-
-/* ---------- Confirmación con el código (index.html, SOP-40) ---------- */
-.codigo-generado:focus {
-  outline: none;
-}
-
-/* Botón secundario: borde azul, para no competir con "Consultar mi solicitud" */
-.boton-copiar {
-  width: 100%;
-  padding: 12px;
-  font: inherit;
-  font-weight: 600;
-  color: var(--primario);
-  background: var(--tarjeta);
-  border: 2px solid var(--primario);
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.boton-copiar:active {
-  background: #e0e7ff;
-}
-
-.mensaje-copiar {
-  min-height: 1.2em;
-  margin: 8px 0 16px;
-  font-size: 0.9rem;
-}
-
-.aviso-guardar {
-  margin: 0 0 20px;
-  padding: 12px 14px;
-  border-radius: 8px;
-  background: var(--fondo);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  text-align: left;
-}
-
-/* Enlace con apariencia de botón principal */
-.confirmacion a.boton-consultar {
-  display: block;
-  padding: 14px;
-  font-weight: 600;
-  color: #fff;
-  text-decoration: none;
-  background: var(--primario);
-  border-radius: 8px;
-}
-
-/* ---------- Panel del técnico (tecnico.html, SOP-14 y SOP-17) ---------- */
-.card-tecnico {
-  max-width: 760px;
-  text-align: left;
-}
-
-.card-tecnico h1 {
-  font-size: 1.6rem;
-}
-
-/* Oculta un texto a la vista, pero lo deja para lectores de pantalla */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
   white-space: nowrap;
+  color: var(--text);
+  background: color-mix(in srgb, var(--estado) 15%, transparent);
+  border-radius: var(--r-chip);
+}
+
+.etiqueta-estado::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  background: var(--estado);
+}
+
+.estado-recibida { --estado: var(--info); }
+.estado-recibida::before { border-radius: 50%; }
+
+.estado-en-revision { --estado: var(--reserved); }
+.estado-en-revision::before { border-radius: 2px; }
+
+.estado-esperando-tu-respuesta { --estado: var(--limited); }
+.estado-esperando-tu-respuesta::before { border-radius: 1px; transform: rotate(45deg); }
+
+.estado-resuelta { --estado: var(--ok); }
+.estado-resuelta::before {
+  width: 10px;
+  height: 10px;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* ---------- Panel del técnico ---------- */
+.card-clave {
+  max-width: 440px;
+  margin: 24px auto 0;
+}
+
+.card-clave h1 {
+  font-size: 1.5rem;
+}
+
+.card-clave .secundario {
+  margin: 8px 0 24px;
 }
 
 .panel-barra {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-.abiertas {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-.abiertas strong {
-  font-size: 1.6rem;
-  color: var(--primario);
+.panel-barra .secundario {
+  margin-top: 6px;
 }
 
 .panel-acciones {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
 }
 
 .panel-acciones select {
-  padding: 10px;
-  font: inherit;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background: #fff;
+  width: auto;
+  min-width: 200px;
 }
 
-.boton-secundario {
-  padding: 10px 14px;
-  font: inherit;
-  color: var(--primario);
-  background: #fff;
-  border: 1px solid var(--primario);
-  border-radius: 8px;
-  cursor: pointer;
+.abiertas {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  min-height: 48px;
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-btn);
+}
+
+.abiertas strong {
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-text);
+}
+
+#error-panel:not(:empty) {
+  margin-bottom: 16px;
+}
+
+.vacio {
+  padding: 48px 16px;
+  text-align: center;
+  background: var(--surface);
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--r-card);
+}
+
+.vacio-titulo {
+  margin-bottom: 4px;
+  font-size: 1.125rem;
+  font-weight: 700;
 }
 
 .lista-solicitudes {
-  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 12px;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 .solicitud {
-  margin-bottom: 12px;
-  padding: 14px;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-}
-
-.solicitud p {
-  margin: 4px 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-tile);
+  box-shadow: var(--shadow-soft);
 }
 
 .solicitud-cabecera {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
 }
 
+.s-codigo {
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
 .s-servicio {
-  font-weight: 600;
+  margin-top: 8px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
 }
 
 .s-descripcion {
-  color: var(--suave);
+  margin-top: 4px;
   overflow-wrap: anywhere;
 }
 
-.etiqueta-estado {
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  background: #e5e7eb;
-}
-
-.estado-recibida { background: #e0e7ff; color: var(--primario); }
-.estado-en-revision { background: #dbeafe; color: #1e40af; }
-.estado-esperando-tu-respuesta { background: #fef3c7; color: #92400e; }
-.estado-resuelta { background: #dcfce7; color: var(--ok); }
-
 .solicitud details {
-  margin: 8px 0;
+  margin-top: 10px;
 }
 
 .solicitud summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--accent-text);
   cursor: pointer;
-  color: var(--primario);
 }
 
 .detalle {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 4px 12px;
+  gap: 6px 12px;
   margin: 8px 0 0;
+  padding: 12px;
+  font-size: 0.875rem;
+  background: var(--surface-2);
+  border-radius: var(--r-input);
 }
 
 .detalle dt {
-  font-weight: 600;
+  color: var(--text-2);
 }
 
 .detalle dd {
@@ -538,186 +1025,22 @@ h1 {
   overflow-wrap: anywhere;
 }
 
-.form-responsable {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.form-responsable label {
-  flex: 1 1 200px;
-  font-weight: 600;
-}
-
-.form-responsable input {
-  display: block;
-  width: 100%;
-  margin-top: 4px;
-  padding: 10px;
-  font: inherit;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-}
-
-.form-responsable input.campo-invalido {
-  border-color: var(--error);
-}
-
-.form-responsable button {
-  padding: 10px 16px;
-  font: inherit;
-  font-weight: 600;
-  color: #fff;
-  background: var(--primario);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.form-responsable button:disabled {
-  opacity: 0.6;
-  cursor: wait;
-}
-
-.form-responsable .mensaje-error,
-.form-responsable .mensaje-ok {
-  flex-basis: 100%;
-  min-height: 0;
-  margin: 0;
-}
-
-.mensaje-ok {
-  font-size: 0.9rem;
-  color: var(--ok);
-}
-
-/* ---------- Cambio de estado en el panel del técnico (SOP-15, SOP-16) ---------- */
-.form-estado {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 8px;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #e5e7eb;
-}
-
-.form-estado label {
-  flex: 1 1 200px;
-  font-weight: 600;
-}
-
-/* La nota ocupa todo el ancho para escribir cómodo en celular */
-.form-estado .s-campo-nota {
-  flex-basis: 100%;
-}
-
-.form-estado select,
-.form-estado textarea {
-  display: block;
-  width: 100%;
-  margin-top: 4px;
-  padding: 10px;
-  font: inherit;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background: #fff;
-}
-
-.form-estado textarea {
-  resize: vertical;
-}
-
-.form-estado textarea.campo-invalido {
-  border-color: var(--error);
-}
-
-.form-estado button {
-  padding: 10px 16px;
-  font: inherit;
-  font-weight: 600;
-  color: #fff;
-  background: var(--primario);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.form-estado button:disabled {
-  opacity: 0.6;
-  cursor: wait;
-}
-
-.form-estado .mensaje-error,
-.form-estado .mensaje-ok {
-  flex-basis: 100%;
-  min-height: 0;
-  margin: 0;
-}
-
-/* ---------- Respuesta del solicitante (SOP-44) ---------- */
-.form-respuesta {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #fcd34d;
-}
-
-.form-respuesta label {
-  display: block;
-  margin: 8px 0 4px;
-  font-weight: 600;
-}
-
-.form-respuesta textarea,
-.form-respuesta input[type="file"] {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  font: inherit;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background: #fff;
-}
-
-.form-respuesta textarea {
-  resize: vertical;
-}
-
-.form-respuesta .campo-invalido {
-  border-color: var(--error);
-}
-
-.form-respuesta button {
-  width: 100%;
-  margin-top: 8px;
-  padding: 12px 16px;
-  font: inherit;
-  font-weight: 600;
-  color: #fff;
-  background: var(--primario);
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.form-respuesta button:disabled {
-  opacity: 0.6;
-  cursor: wait;
-}
-
-/* Respuestas del solicitante en el panel del técnico (SOP-44) */
+/* Respuestas del solicitante */
 .respuestas {
-  margin-top: 10px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: #eef2ff;
+  margin-top: 12px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--reserved) 10%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--reserved) 25%, transparent);
+  border-radius: var(--r-input);
 }
 
 .respuestas-titulo {
-  margin: 0 0 6px;
-  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
 }
 
 .s-respuestas {
@@ -727,21 +1050,105 @@ h1 {
 }
 
 .s-respuestas li + li {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid #c7d2fe;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
 }
 
 .s-respuestas p {
-  margin: 2px 0 0;
+  margin-top: 2px;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.s-respuestas .boton {
+  margin-top: 8px;
 }
 
 .respuesta-fecha {
-  font-size: 0.8rem;
-  color: var(--suave);
+  font-size: 0.8125rem;
+  color: var(--text-2);
 }
 
-.boton-archivo {
+/* Formularios de cada solicitud: responsable y estado */
+.form-responsable,
+.form-estado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.form-responsable label,
+.form-estado label {
+  flex: 1 1 180px;
+  margin: 0;
+}
+
+.form-responsable input,
+.form-estado select,
+.form-estado textarea {
   margin-top: 6px;
+}
+
+.form-estado .s-campo-nota {
+  flex-basis: 100%;
+}
+
+.form-responsable .mensaje-error,
+.form-responsable .mensaje-ok,
+.form-estado .mensaje-error,
+.form-estado .mensaje-ok {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+/* ---------- Pantallas más grandes ---------- */
+@media (min-width: 640px) {
+  .topbar {
+    padding: 0 24px;
+  }
+
+  .hero {
+    padding: 56px 24px 104px;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    line-height: 1.08;
+  }
+
+  .pagina {
+    padding: 48px 24px 64px;
+  }
+
+  .pagina-sobre-hero {
+    padding-top: 0;
+  }
+
+  .card {
+    padding: 32px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .topbar {
+    padding: 0 32px;
+  }
+
+  .pagina-ancha {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
 }

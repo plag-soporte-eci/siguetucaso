@@ -20,6 +20,7 @@ Proyecto final de **Pensamiento Lean y Agile** · Escuela Colombiana de Ingenier
 ## Tabla de contenido
 - [El problema](#el-problema)
 - [Qué hace](#qué-hace)
+- [Cómo se ve](#cómo-se-ve)
 - [Cómo funciona](#cómo-funciona)
 - [Ejecutarlo en tu computador](#ejecutarlo-en-tu-computador)
 - [API](#api)
@@ -56,6 +57,14 @@ En las entrevistas con quienes piden soporte TI encontramos que **nadie sabe en 
 | Eliminar | El inicio de sesión del solicitante |
 | Reducir | El formulario: solo los campos necesarios |
 | Crear | El código de seguimiento y el estado "Esperando tu respuesta" con nota |
+
+## Cómo se ve
+
+| Reportar | Consultar y responder | Panel del técnico |
+|---|---|---|
+| ![Formulario para reportar un problema](docs/capturas/reportar.jpg) | ![Consulta de una solicitud que espera la respuesta del solicitante](docs/capturas/consultar.jpg) | ![Panel del técnico con las solicitudes y sus estados](docs/capturas/panel-tecnico.jpg) |
+
+El diseño sigue la identidad visual de DiNNo (crema, petróleo y naranja, fuente Plus Jakarta Sans), está pensado primero para celular y tiene modo oscuro automático.
 
 ## Cómo funciona
 
@@ -164,6 +173,7 @@ public/
   consultar.html               consultar por código y responder
   tecnico.html                 panel del técnico
   styles.css, js/              estilos y un archivo JS por página
+  fonts/                       fuente Plus Jakarta Sans
 tests/                         una prueba por historia
 ```
 
@@ -278,7 +288,7 @@ Se volvió de la v1.0.0 al deploy anterior (`7f459c6`, versión `0.1.0`) y luego
 |---|---|---|
 | [v1.0.0](https://github.com/plag-soporte-eci/siguetucaso/releases/tag/v1.0.0) | 1 · Registro y consulta | Formulario guiado, código de seguimiento con botón Copiar y consulta pública del estado |
 | [v2.0.0](https://github.com/plag-soporte-eci/siguetucaso/releases/tag/v2.0.0) | 2 · Gestión del técnico | Panel del técnico: lista centralizada, cambio de estado, nota "Esperando tu respuesta" y responsable |
-| Siguiente | Cierre | Respuesta del solicitante con archivo, rediseño visual y documentación final |
+| Siguiente | Cierre | Respuesta del solicitante con archivo, rediseño con la identidad de DiNNo y documentación final |
 
 ## Equipo y forma de trabajo
 | Integrante | Rol |
@@ -304,6 +314,7 @@ Trabajamos con Scrum y Kanban en [Jira](https://plag-soporte-eci.atlassian.net/j
 | [jest](https://jestjs.io/) | Pruebas automatizadas (desarrollo) | MIT |
 | [supertest](https://github.com/ladjs/supertest) | Pruebas de endpoints HTTP (desarrollo) | MIT |
 | [pg-mem](https://github.com/oguimbal/pg-mem) | PostgreSQL en memoria para pruebas (desarrollo) | MIT |
+| [Plus Jakarta Sans](https://github.com/tokotype/PlusJakartaSans) | Fuente de la interfaz, guardada en `public/fonts/` | SIL OFL 1.1 |
 | Claude (IA) | Apoyo en documentación, plantillas y esqueleto inicial de la app | – |
 
 ## Licencia

@@ -17,7 +17,6 @@ if (process.env.NODE_ENV !== 'test') {
 // 3 MB alcanza para un adjunto de 2 MB en base64 (SOP-44).
 app.use(express.json({ limit: '3mb' }));
 
-// Rutas de la API
 app.use(healthRouter);
 app.use(solicitudesRouter);
 app.use(tecnicoRouter); // SOP-14: API del técnico (exige X-Tecnico-Clave)

@@ -119,7 +119,7 @@ if (typeof document !== 'undefined') {
     cajaNota.hidden = !hayNota;
     document.getElementById('res-nota').textContent = hayNota ? solicitud.notaTecnico : '';
 
-    // Responsable: es null hasta el Sprint 2.
+    // Responsable: queda vacío hasta que el técnico lo asigne.
     const lineaResponsable = document.getElementById('linea-responsable');
     lineaResponsable.hidden = !solicitud.responsable;
     document.getElementById('res-responsable').textContent = solicitud.responsable || '';
