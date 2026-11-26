@@ -1,0 +1,21 @@
+# Configuración de gitleaks (SOP-48).
+# Usa todas las reglas que trae gitleaks y agrega la que más importa en este
+# proyecto: las reglas por defecto NO detectan una cadena de conexión de
+# PostgreSQL (como la DATABASE_URL de Neon) con la contraseña adentro.
+title = "gitleaks SigueTuCaso"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "postgres-url-con-clave"
+description = "Cadena de conexión de PostgreSQL (por ejemplo Neon) con usuario y contraseña"
+# postgres://usuario:CONTRASEÑA@host/... -> el grupo 1 es la contraseña
+regex = '''postgres(?:ql)?://[^:\s/@'"`]+:([^@\s'"`]{4,})@[^\s'"`]+'''
+secretGroup = 1
+keywords = ["postgres"]
+
+  # Los ejemplos de la documentación usan palabras de relleno, no claves reales.
+  [[rules.allowlists]]
+  regexTarget = "secret"
+  regexes = ['''^(?i)(clave|contraseña|contrasena|password|pass|secret|usuario|x{3,}|\*+|<[^>]+>)$''']

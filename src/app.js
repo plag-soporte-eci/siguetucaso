@@ -9,6 +9,19 @@ const tecnicoRouter = require('./routes/tecnico');
 
 const app = express();
 
+// Cabeceras de seguridad básicas (SOP-48), sin librerías extra.
+// No anunciar que el servidor usa Express: menos pistas para un atacante.
+app.disable('x-powered-by');
+app.use((req, res, next) => {
+  // El navegador no "adivina" el tipo de un archivo: usa el que dice el servidor.
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  // Ningún otro sitio puede mostrar la app dentro de un <iframe> (evita el clickjacking).
+  res.setHeader('X-Frame-Options', 'DENY');
+  // No se envía a otros sitios la página de donde viene el usuario.
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  next();
+});
+
 // Registra cada petición en consola (se omite durante las pruebas).
 if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
